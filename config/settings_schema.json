@@ -815,6 +815,21 @@
     ]
   },
   {
+    "name": "SEO",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Used to build the Organization structured data on the homepage, so Google can attach your logo to the brand in search results."
+      },
+      {
+        "type": "image_picker",
+        "id": "seo_logo",
+        "label": "Logo for search results",
+        "info": "Square or wide PNG/JPG, at least 512px on the long edge. Leave empty to omit the logo from structured data."
+      }
+    ]
+  },
+  {
     "name": "Swym Wishlist Product Button",
     "settings": [
       {

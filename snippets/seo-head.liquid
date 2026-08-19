@@ -1,0 +1,215 @@
+{%- comment -%}
+  ------------------------------------------------------------------------------------------------
+  seo-head
+
+  Title, meta description, canonical, robots and hreflang for every template.
+
+  Replaces the one-line title/description that used to sit in layout/theme.liquid, which produced:
+    - product titles with no brand at all ("Edge Ear Cuff")
+    - collection pages with NO meta description whatsoever
+    - product descriptions escaped twice, so "&amp;" reached the SERP as "&amp;amp;"
+
+  A merchant-authored SEO title or description in the Shopify admin always wins - the fallbacks
+  below only fill the gap when the admin field is empty.
+  ------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+  assign brand = shop.name | strip
+  assign separator = ' | '
+  assign seo_title = ''
+  assign seo_description = page_description
+
+  case request.page_type
+    when 'index'
+      assign seo_title = page_title
+
+    when 'product'
+      comment
+        page_title equals product.title unless the merchant wrote a custom SEO title. When they
+        did, respect it verbatim; otherwise build "Product | Brand".
+      endcomment
+      if page_title == product.title
+        assign seo_title = product.title | append: separator | append: brand
+      else
+        assign seo_title = page_title
+      endif
+
+      if seo_description == blank
+        assign seo_description = product.description
+      endif
+
+    when 'collection'
+      if page_title == collection.title
+        assign seo_title = collection.title | append: separator | append: brand
+      else
+        assign seo_title = page_title
+      endif
+
+      if seo_description == blank
+        assign seo_description = collection.description
+      endif
+
+      if seo_description == blank
+        assign seo_description = 'Shop ' | append: collection.title | append: ' at ' | append: brand | append: '. Consciously handcrafted, symbolic demi-fine jewellery, made to be worn every day.'
+      endif
+
+    when 'article'
+      assign seo_title = article.title | append: separator | append: blog.title | append: separator | append: brand
+
+      if seo_description == blank
+        assign seo_description = article.excerpt
+      endif
+
+      if seo_description == blank
+        assign seo_description = article.content
+      endif
+
+    when 'blog'
+      assign seo_title = blog.title | append: separator | append: brand
+
+      if seo_description == blank
+        assign seo_description = 'Stories, craft notes and new releases from ' | append: brand | append: '.'
+      endif
+
+    when 'page'
+      if page_title == page.title
+        assign seo_title = page.title | append: separator | append: brand
+      else
+        assign seo_title = page_title
+      endif
+
+      if seo_description == blank
+        assign seo_description = page.content
+      endif
+
+    when 'search'
+      if search.performed
+        assign seo_title = 'Search results for "' | append: search.terms | append: '"' | append: separator | append: brand
+      else
+        assign seo_title = 'Search' | append: separator | append: brand
+      endif
+
+    when 'cart'
+      assign seo_title = 'Your cart' | append: separator | append: brand
+
+    when '404'
+      assign seo_title = 'Page not found' | append: separator | append: brand
+
+    when 'list-collections'
+      assign seo_title = 'Collections' | append: separator | append: brand
+
+      if seo_description == blank
+        assign seo_description = 'Browse every collection from ' | append: brand | append: '.'
+      endif
+
+    else
+      assign seo_title = page_title
+  endcase
+
+  if seo_title == blank
+    assign seo_title = brand
+  endif
+
+  if current_page != 1
+    assign page_label = 'general.page' | t: page: current_page
+    assign seo_title = seo_title | append: ' – ' | append: page_label
+  endif
+
+  comment
+    strip_html leaves entities intact, so escape_once is what keeps "&amp;" from becoming
+    "&amp;amp;" the way the old markup did.
+  endcomment
+  assign seo_description = seo_description | strip_html | replace: '&nbsp;', ' ' | strip_newlines | truncate: 160
+
+  comment
+    Pages that must never compete in the index. Shopify already returns the right status for 404
+    and gift cards; these are the ones that would otherwise be crawlable thin duplicates.
+  endcomment
+  assign noindex_page_types = 'search,cart,customers/account,customers/login,customers/register,customers/addresses,customers/order,customers/reset_password,customers/activate_account'
+  assign noindex_list = noindex_page_types | split: ','
+-%}
+
+<title>{{ seo_title }}</title>
+
+{%- if seo_description != blank -%}
+  <meta name="description" content="{{ seo_description | escape_once }}">
+{%- endif -%}
+
+<link rel="canonical" href="{{ canonical_url }}">
+
+{%- if noindex_list contains request.page_type -%}
+  <meta name="robots" content="noindex, follow">
+{%- endif -%}
+
+{%- comment -%}Tell Google which localised URL serves which audience.{%- endcomment -%}
+{%- if shop.published_locales.size > 1 -%}
+  {%- liquid
+    comment
+      canonical_url is absolute and already carries the current locale prefix. Strip the origin
+      and that prefix to get the bare path, then re-prefix it for each published locale.
+    endcomment
+    assign locale_path = canonical_url | remove_first: request.origin
+
+    if routes.root_url != '/'
+      assign locale_path = locale_path | remove_first: routes.root_url
+    endif
+
+    unless locale_path == '/'
+      assign locale_path = locale_path | remove_first: '/'
+    endunless
+  -%}
+  {%- for locale in shop.published_locales -%}
+    {%- liquid
+      assign locale_root = locale.root_url
+
+      unless locale_root == '/'
+        assign locale_root = locale_root | append: '/'
+      endunless
+    -%}
+    <link rel="alternate" hreflang="{{ locale.iso_code }}" href="{{ request.origin }}{{ locale_root }}{{ locale_path }}">
+  {%- endfor -%}
+  <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+{%- endif -%}
+
+{%- comment -%}
+  Organization schema. The theme already emits WebSite and BreadcrumbList via microdata-schema,
+  but nothing tied the storefront to the brand entity - no logo, no social profiles.
+{%- endcomment -%}
+{%- if request.page_type == 'index' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ brand | json }},
+      "url": {{ request.origin | append: routes.root_url | json }}
+      {%- if settings.seo_logo != blank -%}
+        , "logo": {{ settings.seo_logo | image_url: width: 512 | prepend: 'https:' | json }}
+      {%- endif -%}
+      {%- if shop.description != blank -%}
+        , "description": {{ shop.description | strip_html | json }}
+      {%- endif -%}
+      {%- liquid
+        assign social_settings = 'social_instagram,social_facebook,social_tiktok,social_pinterest,social_youtube,social_linkedin,social_twitter,social_threads' | split: ','
+        assign social_handles = ''
+
+        for key in social_settings
+          assign value = settings[key]
+
+          if value != blank
+            assign social_handles = social_handles | append: value | append: '~'
+          endif
+        endfor
+
+        assign social_list = social_handles | split: '~'
+      -%}
+      {%- if social_list.size > 0 -%}
+        , "sameAs": [
+          {%- for handle in social_list -%}
+            {{ handle | json }}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      {%- endif -%}
+    }
+  </script>
+{%- endif -%}

@@ -2,38 +2,26 @@
 
 <html class="no-js" lang="{{ request.locale.iso_code }}" dir="{% render 'direction' %}">
   <head>
-
-     <!-- Hotjar Tracking Code for SALLY SKOUFIS -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:3802428,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=5.0">
 
-    <title>{% if page_title == blank %}{{ shop.name }}{% else %}{{ page_title }}{% if current_page != 1 %} &ndash; {{ 'general.page' | t: page: current_page }}{% endif %}{% endif %}</title>
-
-    {%- if page_description -%}
-      <meta name="description" content="{{ page_description | escape }}">
-    {%- endif -%}
-
-    <link rel="canonical" href="{{ canonical_url }}">
+    {%- render 'seo-head' -%}
 
     {%- if settings.favicon -%}
       <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 96 }}">
       <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180 }}">
     {%- endif -%}
 
-    {%- comment -%}Few prefetch to increase performance on commonly used third-parties{%- endcomment -%}
+    {%- comment -%}
+      Fonts are served from this theme's own assets, so the only origin on the critical path is
+      Shopify's CDN. The Google Fonts <link> that used to sit here cost a DNS + TLS handshake to
+      fonts.googleapis.com, then a second one to fonts.gstatic.com, before any body text painted.
+    {%- endcomment -%}
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'wixmadefortext-latin-normal.woff2' | asset_url }}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'Bembo.woff2' | asset_url }}">
 
     {%- unless settings.heading_font.system? -%}
       <link rel="preload" href="{{ settings.heading_font | font_url }}" as="font" type="font/woff2" crossorigin>
@@ -48,10 +36,24 @@
     {%- render 'css-variables' -%}
     {%- render 'js-variables' -%}
 
+    {%- comment -%}
+      Stylesheets, all same-origin now. tiny-slider, AOS and Swiper used to come from cdnjs,
+      unpkg and jsDelivr - three extra origins on the critical path, and the unpkg URLs answered
+      with a 302 before serving anything.
+    {%- endcomment -%}
+    <link rel="preload" as="style" href="{{ 'theme.css' | asset_url }}">
+    <link rel="preload" as="style" href="{{ 'komradd.css' | asset_url }}">
+
+    {{- 'theme.css' | asset_url | stylesheet_tag -}}
+    {{- 'komradd.css' | asset_url | stylesheet_tag -}}
+    {{- 'michaelcustom.css' | asset_url | stylesheet_tag -}}
+    {{- 'tiny-slider.min.css' | asset_url | stylesheet_tag -}}
+    {{- 'aos.css' | asset_url | stylesheet_tag -}}
+
     {%- if request.page_type == 'gift_card' -%}
       <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
     {%- endif -%}
-    
+
     <script async src="{{ 'es-module-shims.min.js' | asset_url }}"></script>
 
     <script type="importmap">
@@ -70,55 +72,30 @@
 
     {{ content_for_header }}
 
-    
+    {%- if request.page_type == 'product' -%}
+      {% style %}
+        .timesact-preorder-description::after {
+          content: " {{ product.metafields.custom.bespoke_lead_time }}.";
+        }
+      {% endstyle %}
+    {%- endif -%}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    {%- comment -%}Redirect products priced at $0 to the catalogue.{%- endcomment -%}
+    {%- if request.page_type == 'product' -%}
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-    
-    {{- 'theme.css' | asset_url | stylesheet_tag: preload: true -}}
-    {{- 'komradd.css' | asset_url | stylesheet_tag: preload: true -}}
-    {{- 'michaelcustom.css' | asset_url | stylesheet_tag: preload: true -}}
-
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.8.8/tiny-slider.css">
-    
-    
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-   {% style %}
-
-
-  .timesact-preorder-description::after{
-    content: " {{ product.metafields.custom.bespoke_lead_time  }}.";
-  }
-      
-
-  {% endstyle %}
-
- {% comment %} Patch to priced $0 {% endcomment %}
-
-{% if request.page_type == 'product' %}
-  {% assign current_variant = product.selected_or_first_available_variant %}
-  
-  {% comment %} Check if the price is 0. {% endcomment %}
-  {% if current_variant.price == 0 %}
-    
-    {% comment %} Prevent redirect inside the Shopify Theme Editor {% endcomment %}
-    {% unless request.design_mode %}
-      <script type="text/javascript">
-        // Redirects to https://sallyskoufis.com/collections/all-products
-        window.location.replace("/collections/all-products");
-      </script>
-      <style>
-        /* Hides the body content briefly to prevent "flashing" the product before redirect */
-        body { opacity: 0; pointer-events: none; }
-      </style>
-    {% endunless %}
-    
-  {% endif %}
-{% endif %}
+      {%- if current_variant.price == 0 -%}
+        {%- unless request.design_mode -%}
+          <script>
+            window.location.replace("/collections/all-products");
+          </script>
+          <style>
+            /* Hide the body briefly so the product does not flash before the redirect. */
+            body { opacity: 0; pointer-events: none; }
+          </style>
+        {%- endunless -%}
+      {%- endif -%}
+    {%- endif -%}
   </head>
 
   {% liquid
@@ -136,7 +113,7 @@
       assign features_class = features_class | append: 'features--page-transition '
     endif
   %}
- 
+
   <body class="body-class {{ features_class }}
     {% if template == "index" %}
       homepage
@@ -147,15 +124,10 @@
     {% endif %}
     ">
 
-    
-    
     {%- render 'shadow-dom-templates' -%}
 
     <loading-bar class="loading-bar" aria-hidden="true"></loading-bar>
     <a href="#main" allow-hash-change class="skip-to-content sr-only">{{ 'general.accessibility.skip_to_content' | t }}</a>
-
-    <script src="{{ 'tinyslidercustom.js' | asset_url }}"></script>
-
 
     {%- if request.page_type != 'password' -%}
       {%- sections 'header-group' -%}
@@ -170,391 +142,95 @@
       {%- sections 'footer-group' -%}
     {%- endif -%}
 
+    {%- comment -%}
+      ------------------------------------------------------------------------------------------
+      SCRIPTS
 
-    <script id="respondio__growth_tool" src="https://cdn.respond.io/widget/widget.js?wId=63db6fd2-9014-424c-a537-8eb0fc8ddda1"></script>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paroller.js/1.4.1/jquery.paroller.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paroller.js/1.4.1/jquery.paroller.js"></script>
-    
-
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-      AOS.init();
-    </script>
-
-
-
-    {% if template == "product" %}
-      <script>
-        $(document).ready(function() {
-          setTimeout(function() {
-            console.log("okay");
-            $('.product-list, .prod-coll-slider').on('mouseenter', '[class^="triangle_variant_"]', function() {
-                console.log("Hover detected on color variant");
-                var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-                $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).addClass('shown');
-            }).on('mouseleave', '[class^="triangle_variant_"]', function() {
-                console.log("Hover ended on color variant");
-                var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-                $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).removeClass('shown');
-            });
-          }, 2000);
-        });
-      </script>
-    {% else %}
-      <script>
-        $(document).ready(function() {
-          $('.product-list, .prod-coll-slider').on('mouseenter', '[class^="triangle_variant_"]', function() {
-              console.log("Hover detected on color variant");
-              var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-              $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).addClass('shown');
-          }).on('mouseleave', '[class^="triangle_variant_"]', function() {
-              console.log("Hover ended on color variant");
-              var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-              $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).removeClass('shown');
-          });
-        });
-      </script>
-    {% endif %}
-
-    
-
-<script>
-      $(document).ready(function() {
-
-        /*
-        // Handle hover event on the color variant links using event delegation
-        $('.product-list, .prod-coll-slider').on('mouseenter', '[class^="triangle_variant_"]', function() {
-            var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-            $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).addClass('shown');
-        }).on('mouseleave', '[class^="triangle_variant_"]', function() {
-            var variantClass = $(this).attr('class').split(' ')[0].replace('triangle_variant_', '');
-            $(this).closest('.product-card').find('.image_prod_cstm_' + variantClass).removeClass('shown');
-        });
-        */
-
-        
-
-
-      var load_more_btn = $('.load-more_btn');
-      var load_more_spinner = $('.load-more_spinner');
-      console.log(parseInt($('[data-current-page]').val()));
-      console.log(parseInt($('[data-total-pages]').val()));
-      if (parseInt($('[data-total-pages]').val()) == parseInt($('[data-current-page]').val())){
-        load_more_btn.hide();
-      }
-      $('.js-load-more').on('click', function(){
-          var $this =$(this),totalPages = parseInt($('[data-total-pages]').val()),currentPage = parseInt($('[data-current-page]').val());
-          $this.attr('disabled', true);
-          $this.find('[loader]').removeClass('hide');
-          currentPage = currentPage+1;
-          var nextUrl = $('[data-next-url]').val().replace(/page=[0-9]+/,'page='+currentPage);
-          console.log(nextUrl);
-          $('[data-current-page]').val(currentPage);
-          $.ajax({
-            url: nextUrl,
-            type: 'GET',
-            dataType: 'html',
-            beforeSend: function(){
-              load_more_btn.hide();
-              load_more_spinner.show();
-            },
-            success: function(responseHTML){
-              $('.product-list').append($(responseHTML).find('.product-list').html());
-            },
-            complete: function() {
-              if(currentPage < totalPages) {
-                  $this.attr('disabled', false); $this.find('[load-more-text]').removeClass('hide'); $this.find('[loader]').addClass('hide');
-                 {% comment %} load_more_btn.hide(); {% endcomment %}
-  
-                load_more_btn.show();
-                load_more_spinner.hide();
-                console.log(currentPage);
-                console.log(totalPages);
-              } 
-              else{
-                load_more_btn.hide();
-                load_more_spinner.hide();
-              }
-            }
-          })
-        });
-       });
-      </script> 
-    
-  {{ '//cdn.shopify.com/s/files/1/0194/1736/6592/t/1/assets/booster-page-speed-optimizer.js?23' | script_tag }}
-
-</body>
-
-  
-
-  <script>
-    {% comment %} TIMESACT PRE ORER {% endcomment %}
-      document.addEventListener("DOMContentLoaded", function() {
-          
-          var leadTime = "{{ product.metafields.custom.bespoke_lead_time | escape }}";
-          var rawBackorder = "{{ product.metafields.custom.allow_backorder }}"; 
-          var allowBackorder = rawBackorder.toLowerCase().trim();
-          var shouldShow = (leadTime.trim() !== "") && (allowBackorder === 'true');
-
-          if (shouldShow) {
-            return; 
-          }
-
-          function hideTimesact() {
-            var target = document.querySelector('.timesact-preorder-description');
-            if (target) {
-              target.style.setProperty('display', 'none', 'important');
-              target.style.setProperty('margin-bottom', '-20px', 'important');
-              console.log("Hiding Timesact text because conditions were not met.");
-            }
-          }
-
-          hideTimesact();
-          var observer = new MutationObserver(function(mutations) {
-            var target = document.querySelector('.timesact-preorder-description');
-            if (target) {
-              hideTimesact(); 
-            }
-          });
-
-          observer.observe(document.body, { childList: true, subtree: true });
-        });
-    {% comment %} END TIMESACT PRE ORER {% endcomment %}
-
-    var pswpElement = document.querySelectorAll('.pswp__container')[0];
-
-    var options = {
-        // Other PhotoSwipe options
-        getDoubleTapZoom: function(isMouseClick, item) {
-          // Return 1 to indicate 100% width zoom
-          return 4;
-       }
-    };
-
-    var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-    gallery.init();
-  </script>
- 
-  <script>
-    // Get the header element
-    const header = document.querySelector(".homepage header");
-    
-
-    // Get the height of the header element
-    const headerHeight = header.offsetHeight;
-  
-    // Determine the scroll threshold (100vh)
-    const scrollThreshold = window.innerHeight + headerHeight;
-  
-    // Function to check and add the highlight class
-    function checkScrollPosition() {
-      const scrollPosition = window.scrollY || window.pageYOffset;
-      if (scrollPosition >= scrollThreshold) {
-        header.classList.add("highlight");
-      } else {
-        header.classList.remove("highlight");
-      }
-    }
-  
-    // Add a scroll event listener to check the scroll position
-    window.addEventListener("scroll", checkScrollPosition);
-  </script>
-<script>
-  window.addEventListener('load', function() {
-    // Get the height of the footer
-    const footer = document.querySelector('footer');
-    const footerHeight = footer.offsetHeight;
-
-    // Subtract 30 pixels from the footer height
-    const adjustedFooterHeight = footerHeight - 30;
-
-    // Check the screen width
-    const screenWidth = window.innerWidth;
-
-    // Set the margin-bottom of the main element based on screen size
-    if (screenWidth < 700) {
-      document.querySelector('main').style.marginBottom = '100vh';
-    } else {
-      document.querySelector('main').style.marginBottom = adjustedFooterHeight + 'px';
-    }
-  });
-</script>
-
-
-  <script>
-        window.addEventListener('scroll', function() {
-            const videoElement = document.querySelector('.homepage .shopify-section--video');
-            const FooterElement = document.querySelector('footer');
-            const logoicon = document.querySelector('.homepage .header__logo-image');
-            const logotext = document.querySelector('.homepage .header__logo-image.header__logo-image--transparent');
-            const scrollPosition = window.scrollY;
-
-            if (scrollPosition > window.innerHeight) {
-                // Scrolled more than 100vh
-                videoElement.style.zIndex = 0;
-                videoElement.style.opacity = 0;
-
-                logoicon.style.opacity = 1;
-                logotext.style.opacity = 0;
-              
-            } else {
-                // Scrolled less than 100vh
-                videoElement.style.zIndex = 2;
-                videoElement.style.opacity = 1;
-
-                logoicon.style.opacity = 0;
-                logotext.style.opacity = 1;
-
-            }
-        });
-    </script>
+      Everything below used to be ~14 inline blocks, several of them sitting after </body> and
+      inside </html>. Three of them threw on every page load, which silently killed the rest of
+      their block. The logic now lives in custom.js, deferred, with the Liquid-dependent values
+      handed over on window.themeCustom.
+      ------------------------------------------------------------------------------------------
+    {%- endcomment -%}
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const colorSwatches = document.querySelectorAll(".color-swatch");
-        const colorValueSelected = document.querySelector(".color-value-selected");
-        const colorPickerOuter = document.querySelector(".color-picker-outer");
-      
-        colorSwatches.forEach(function (swatch) {
-          swatch.addEventListener("mouseover", function () {
-            const selectedColor = swatch.querySelector("span").textContent;
-            colorValueSelected.textContent = selectedColor;
-      
-            // Add the animate class to trigger the animation
-            colorValueSelected.classList.add("animate");
-            
-            // Remove the animate class after the animation duration to allow it to run again
-            setTimeout(() => {
-              colorValueSelected.classList.remove("animate");
-            }, 500);
-          });
-        });
-      
-
-        colorPickerOuter.addEventListener("mouseout", function () {
-          const checkedInput = colorPickerOuter.querySelector('label.color-swatch');
-          
-          // Get the value of the <span> element inside checkedInput
-          const selectedColorSpan = checkedInput.querySelector('span');
-          const selectedColor = selectedColorSpan.textContent;
-        
-          colorValueSelected.textContent = selectedColor;
-        
-          // Add the animate class to trigger the animation
-          colorValueSelected.classList.add("animate");
-          
-          // Remove the animate class after the animation duration to allow it to run again
-          setTimeout(() => {
-            colorValueSelected.classList.remove("animate");
-          }, 500);
-        });
-
-
-
-      });
-      
+      window.themeCustom = {
+        pageType: {{ request.page_type | json }},
+        bespokeLeadTime: {{ product.metafields.custom.bespoke_lead_time | default: '' | json }},
+        allowBackorder: {{ product.metafields.custom.allow_backorder | default: '' | json }}
+        {%- if product -%}
+          , productTitle: {{ product.title | json }}
+          , productId: {{ product.id | json }}
+          , productUrl: {{ product.url | prepend: request.origin | json }}
+        {%- endif -%}
+      };
     </script>
-    
- <script>
-   $('.richtext-hero').paroller({ factor: 0.3, factorXs: 0.2, factorSm: 0.3, type: 'foreground', direction: 'horizontal', transition: 'transform 1s ease' }); 
-     
-   $('.black-section-home').paroller({ factor: 0.4, factorXs: 0.2, factorSm: 0.3, type: 'foreground', direction: 'horizontal', transition: 'transform 1s ease' }); 
 
-   
-   
-   
- </script>
-  <script>
-    // Get all elements with the class "faq-multi-col-heading"
-    const faqHeadings = document.querySelectorAll('.faq-multi-col-heading');
-    
-    // Add click event listeners to each faq-heading
-    faqHeadings.forEach((heading) => {
-      heading.addEventListener('click', function() {
-        // Find the next element with the class "faq-like-column"
-        const nextColumn = this.nextElementSibling;
-    
-        // Toggle the "faq-active-text" and "faq-title-active" classes
-        this.classList.toggle('faq-title-active');
-        nextColumn.classList.toggle('faq-active-text');
-      });
-    });
-  </script>
-    
+    {%- comment -%}
+      `defer` preserves execution order, so jQuery is always ready before its plugins and before
+      custom.js runs. tinyslidercustom.js supplies window.tns for the announcement bar.
+    {%- endcomment -%}
+    <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'jquery.paroller.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'aos.js' | asset_url }}" defer></script>
+    <script src="{{ 'tinyslidercustom.js' | asset_url }}" defer></script>
+    <script src="{{ 'custom.js' | asset_url }}" defer></script>
 
-  <script>
+    <script>
+      window.addEventListener('load', function () {
+        if (window.AOS) window.AOS.init();
+      }, { once: true });
+    </script>
 
-    window.addEventListener('load', function () {
-      window.onload = addAutoplay;
+    {%- comment -%}
+      ------------------------------------------------------------------------------------------
+      DEFERRED THIRD PARTIES
 
-      console.log('a');
-      
-      function addAutoplay() {
-          var videoLocation = document.getElementById("hero-video");
-          if (window.innerWidth > 749 && videoLocation) {
-              videoLocation.click();
-              console.log('a');
-          }
-      }
-      
-    })
-    
+      Hotjar (session recording) and respond.io (chat widget) are needed neither to render the
+      page nor to buy from it. Hotjar used to be the very first thing in <head>, above <meta
+      charset>. They now load once the page is idle or on the first real interaction - whichever
+      comes first - so they cost nothing on the measured load.
+      ------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+    <script>
+      (function () {
+        var loaded = false;
 
+        function loadDeferredThirdParties() {
+          if (loaded) return;
+          loaded = true;
 
-  </script>
+          /* Hotjar */
+          (function (h, o, t, j, a, r) {
+            h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments); };
+            h._hjSettings = { hjid: 3802428, hjsv: 6 };
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script');
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+          })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 
-  <script>
+          /* respond.io chat widget */
+          var respond = document.createElement('script');
+          respond.id = 'respondio__growth_tool';
+          respond.async = true;
+          respond.src = 'https://cdn.respond.io/widget/widget.js?wId=63db6fd2-9014-424c-a537-8eb0fc8ddda1';
+          document.body.appendChild(respond);
+        }
 
-  window.addEventListener('load', function () {
-      window.onload = addAutoplayMobile;
-  
-      function addAutoplayMobile() {
-          var videoLocationMobile = document.getElementById("hero-video-mobile");
-          if (window.innerWidth < 749 && videoLocationMobile) {
-            videoLocationMobile.click();
-          }
-      }
-   })   
-
-
-  </script>
-
-
-
-  <script>
-    document.querySelectorAll('.topbar-slider').forEach(slider => {
-      tns({
-        container: slider,
-        items: 1,
-        autoplay: true,
-        speed: 2000,
-        autoplayTimeout: 4000,
-        autoplayButtonOutput: false,
-        loop: true
-      });
-    });
-  </script>
-<script>
-    $(document).ready(function(){
-        $(".Base-Material-btn").click(function(){
-            $(".Base-Material-options").toggle();
-            $(this).find('svg').toggleClass('svg-rotate');
+        ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
+          window.addEventListener(evt, loadDeferredThirdParties, { once: true, passive: true });
         });
-    });
-</script>
 
-{% if product %}
-  <script type="text/javascript">
-var _learnq = _learnq || [];
-var classname = document.getElementsByClassName("button w-full");
-var addToCart = function() {
-_learnq.push(['track', 'Added to Cart', item]);
-}; for (var i = 0; i < classname.length; i++) {
-classname[i].addEventListener('click', addToCart, false);
-}
-</script>
-  {% endif %}
-  
+        window.addEventListener('load', function () {
+          if (window.requestIdleCallback) {
+            window.requestIdleCallback(loadDeferredThirdParties, { timeout: 5000 });
+          } else {
+            setTimeout(loadDeferredThirdParties, 3000);
+          }
+        }, { once: true });
+      })();
+    </script>
+  </body>
 </html>

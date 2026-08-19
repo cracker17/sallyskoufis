@@ -1,6 +1,45 @@
+/* Wix Madefor Text (variable, 400-800) - self-hosted.
+   Previously loaded via a render-blocking <link> to fonts.googleapis.com, which then
+   pointed at fonts.gstatic.com: three network hops (two of them cross-origin) before any
+   body text could paint. Serving from the theme's own CDN collapses that to one. */
+@font-face {
+  font-family: 'Wix Madefor Text';
+  font-style: italic;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("wixmadefortext-latin-ext-italic.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Wix Madefor Text';
+  font-style: italic;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("wixmadefortext-latin-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Wix Madefor Text';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("wixmadefortext-latin-ext-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Wix Madefor Text';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("wixmadefortext-latin-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @font-face {
   font-family: Bembo;
-  src: url("Bembo.ttf");
+  /* woff2 first (46% smaller than the TTF); the TTF stays as a fallback. */
+  src: url("Bembo.woff2") format("woff2"),
+       url("Bembo.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -968,6 +1007,16 @@ footer {
 
 main {
   background: white;
+  /* The footer is position:fixed, so main needs bottom room to scroll past it. This used to be
+     assigned from JS on window 'load' - a guaranteed late layout shift. custom.js now publishes
+     --reveal-footer-height as soon as the footer exists, and keeps it in sync on resize. */
+  margin-bottom: var(--reveal-footer-height, 0px);
+}
+
+@media (max-width: 699px) {
+  main {
+    margin-bottom: 100vh;
+  }
 }
 
 .shopify-section--collection-banner {
