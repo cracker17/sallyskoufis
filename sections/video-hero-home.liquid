@@ -26,6 +26,20 @@
 <div id="custom-video-section_{{ section.id }}" {% if section.settings.add-custom-attribute != blank %}{{section.settings.add-custom-attribute}}{% endif %} class="content-over-media content-over-media--{{ section.settings.video_size }}" style="{% render 'surface', text_color: section.settings.text_color %}">
   {%- assign poster_image = section.settings.poster | default: section.settings.video.preview_image -%}
 
+  {%- liquid
+    assign hero_desktop = section.settings.poster
+    assign hero_mobile = section.settings.poster-mobile | default: section.settings.poster
+    assign hero_alt = section.settings.poster_alt
+
+    if hero_alt == blank
+      assign hero_alt = section.settings.poster.alt
+    endif
+
+    if hero_alt == blank
+      assign hero_alt = shop.name
+    endif
+  -%}
+
   {%- capture poster -%}
     {%- unless section.settings.autoplay -%}
       {%- if poster_image != blank -%}
@@ -50,11 +64,61 @@
     {% endif %}
 
     {% if section.settings.poster-mobile != blank %}
-      <img class="show-mobile-hero" src="{{ section.settings.poster-mobile | img_url: 'master' }}">
+      {{- section.settings.poster-mobile
+        | image_url: width: 1100
+        | image_tag:
+            class: 'show-mobile-hero',
+            alt: hero_alt,
+            loading: 'eager',
+            fetchpriority: 'high',
+            decoding: 'async',
+            sizes: '100vw',
+            widths: '480,600,750,900,1100,1500'
+      -}}
     {% endif %}
   {%- else -%}
-    <img class="hero-image-novideo" src="{{ section.settings.poster | img_url: '3000x3000' }}">
-    <img class="hero-image-novideo-mobile" src="{{ section.settings.poster-mobile | img_url: '1000x1000' }}">
+    {%- comment -%}
+      LCP hero. Previously this rendered TWO full-size <img> tags (a 3000x3000 desktop PNG and a
+      1000x1000 mobile PNG) and hid one with CSS - so the browser downloaded both, ~6.2MB total.
+      A <picture> with media queries fetches exactly one, at a sensible width, as WebP.
+      `.content-over-media > picture { display: contents }` (theme.css) means the layout is unchanged.
+    {%- endcomment -%}
+    {%- if hero_desktop != blank -%}
+      {%- if hero_mobile != blank -%}
+        <link rel="preload" as="image" fetchpriority="high" media="(max-width: 749px)"
+          imagesizes="100vw"
+          imagesrcset="{{ hero_mobile | image_url: width: 480 }} 480w, {{ hero_mobile | image_url: width: 750 }} 750w, {{ hero_mobile | image_url: width: 1100 }} 1100w, {{ hero_mobile | image_url: width: 1500 }} 1500w">
+      {%- endif -%}
+      <link rel="preload" as="image" fetchpriority="high" media="(min-width: 750px)"
+        imagesizes="100vw"
+        imagesrcset="{{ hero_desktop | image_url: width: 900 }} 900w, {{ hero_desktop | image_url: width: 1200 }} 1200w, {{ hero_desktop | image_url: width: 1600 }} 1600w, {{ hero_desktop | image_url: width: 2000 }} 2000w">
+
+      <picture>
+        {%- if hero_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            sizes="100vw"
+            width="{{ hero_mobile.width }}"
+            height="{{ hero_mobile.height }}"
+            srcset="{{ hero_mobile | image_url: width: 480 }} 480w, {{ hero_mobile | image_url: width: 750 }} 750w, {{ hero_mobile | image_url: width: 1100 }} 1100w, {{ hero_mobile | image_url: width: 1500 }} 1500w">
+        {%- endif -%}
+        <source
+          media="(min-width: 750px)"
+          sizes="100vw"
+          width="{{ hero_desktop.width }}"
+          height="{{ hero_desktop.height }}"
+          srcset="{{ hero_desktop | image_url: width: 900 }} 900w, {{ hero_desktop | image_url: width: 1200 }} 1200w, {{ hero_desktop | image_url: width: 1600 }} 1600w, {{ hero_desktop | image_url: width: 2000 }} 2000w">
+        <img
+          class="hero-image-novideo"
+          src="{{ hero_desktop | image_url: width: 1600 }}"
+          alt="{{ hero_alt | escape }}"
+          width="{{ hero_desktop.width }}"
+          height="{{ hero_desktop.height }}"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async">
+      </picture>
+    {%- endif -%}
   {%- endif -%}
 
   {%- if section.blocks.size > 0 -%}
@@ -112,8 +176,20 @@
                   }
                 }
               {% endstyle %}
+              {%- liquid
+                comment
+                  Emit the real heading element the merchant picked, not a <p> wearing its class.
+                  The visual class is kept identical so nothing moves. On the homepage the header
+                  logo is already the <h1>, so an h1 here is demoted to h2 to avoid two h1s.
+                endcomment
+                assign hero_heading_tag = block.settings.heading_tag
+
+                if hero_heading_tag == 'h1' and request.page_type == 'index'
+                  assign hero_heading_tag = 'h2'
+                endif
+              -%}
               {%- if block.settings.text != blank -%}
-                <p class="{{ block.settings.heading_tag }} heading_{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+                <{{ hero_heading_tag }} class="{{ block.settings.heading_tag }} heading_{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</{{ hero_heading_tag }}>
               {%- endif -%}
 
             {%- when 'richtext' -%}
@@ -221,6 +297,12 @@
       "type": "image_picker",
       "id": "poster-mobile",
       "label": "Poster Mobile"
+    },
+    {
+      "type": "text",
+      "id": "poster_alt",
+      "label": "Hero image alt text",
+      "info": "Describes the hero image for search engines and screen readers. Falls back to the image's own alt text, then the shop name."
     },
     {
       "type": "color",

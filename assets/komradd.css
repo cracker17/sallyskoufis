@@ -2356,8 +2356,7 @@ variant-picker .block-swatch span {
   text-align: center;
 }
 
-.hero-image-novideo,
-.hero-image-novideo-mobile {
+.hero-image-novideo {
   display: block;
   width: 100%;
   height: 100%;
@@ -2365,10 +2364,6 @@ variant-picker .block-swatch span {
 
 #hero-video-home {
   height: 100%;
-}
-
-.hero-image-novideo-mobile {
-  display: none;
 }
 
 product-list {
@@ -2686,11 +2681,9 @@ facets-sort-popover::part(body) {
     column-gap: 5px !important;
   }
 
+  /* The hero is now a single <picture>; the mobile source is chosen by media query,
+     so the image must stay visible below 750px instead of being swapped out. */
   .hero-image-novideo {
-    display: none;
-  }
-
-  .hero-image-novideo-mobile {
     display: block;
     object-position: center !important;
   }

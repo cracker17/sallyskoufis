@@ -1,1 +1,302 @@
-{"type":"header","name":"Header group","sections":{"cws_moving_text_BNztiE":{"type":"cws-moving-text","blocks":{"cws_moving_text_V6PzTY":{"type":"CWS_moving_text","settings":{"moving_text":"ENDING SOON: BOXING DAY 20% OFF"}},"cws_moving_text_neK9rp":{"type":"CWS_moving_text","settings":{"moving_text":"FREE SHIPPING"}},"cws_moving_text_Hy7zWn":{"type":"CWS_moving_text","settings":{"moving_text":"DISCOUNT APPLIED AT CHECKOUT"}},"cws_moving_text_FVJAYV":{"type":"CWS_moving_text","disabled":true,"settings":{"moving_text":"LIMITED TIME ONLY"}}},"block_order":["cws_moving_text_V6PzTY","cws_moving_text_neK9rp","cws_moving_text_Hy7zWn","cws_moving_text_FVJAYV"],"disabled":true,"name":"CWS Moving Text","settings":{"background_color":"#ff0000","text_color":"#ffffff","show_dot":true,"dot_color":"#ffffff","font_size":16}},"cws_announcement_bar_RU9FQH":{"type":"cws-announcement-bar","blocks":{"announcement_block_WLNgWn":{"type":"announcement_block","settings":{"announcement_text":"<strong>FREE WORLDWIDE DELIVERY<\/strong>","limit_to_country":"WW"}},"announcement_block_DwQQYf":{"type":"announcement_block","settings":{"announcement_text":"<strong>FREE US SHIPPING ON ORDERS OVER $200 USD<\/strong>","limit_to_country":"US"}},"announcement_block_gKppfK":{"type":"announcement_block","disabled":true,"settings":{"announcement_text":"<strong>Extremely Limited:<\/strong> Exclusive Access to Limited Stock. Secure Now.","limit_to_country":"ALL"}},"announcement_block_RYAjzX":{"type":"announcement_block","disabled":true,"settings":{"announcement_text":"<strong>60% Off Exclusive: <\/strong>Limited Edition Edge Ear Cuff. First Time Ever at 60% Off.","limit_to_country":"ALL"}}},"block_order":["announcement_block_WLNgWn","announcement_block_DwQQYf","announcement_block_gKppfK","announcement_block_RYAjzX"],"name":"CWS Announcement Bar","settings":{"bg_color":"#000000","text_color":"#ffffff","icon_size":12,"text_size":12,"top_padding":7,"bottom_padding":7,"auto_slide":true,"slide_speed":5,"pause_on_hover":true,"infinite_loop":true,"slides_per_view":1,"slides_gap":3}},"announcement-bar":{"type":"announcement-bar","blocks":{"message-1":{"type":"message","disabled":true,"settings":{"text":"BLACK FRIDAY SALE"}},"message_aq8kNC":{"type":"message","settings":{"text":"LIMITED TIME ONLY"}},"message_kgM7wA":{"type":"message","disabled":true,"settings":{"text":"ONCE A YEAR SALE"}}},"block_order":["message-1","message_aq8kNC","message_kgM7wA"],"disabled":true,"settings":{"enable_sticky":true,"autoplay":true,"cycle_speed":2,"desktop_font_size":12,"mobile_font_size":10,"background":"#000000","text_color":"#ffffff"}},"c0961a3c-0f4b-4159-b3bf-5015ec6e725d":{"type":"video-hero-home","blocks":{"liquid_N6hpzE":{"type":"liquid","settings":{"liquid":"<style>\n  .custom-video-text{\n    display:flex;\n    align-items:start;\n    justify-content:center;\n    flex-direction:column;\n    padding-left: 50px;\n  }\n  .custom-video-text .subhead{\n    width: 20%;\n  }\n  .custom-video-text .heading{\n    width:30%;\n  }\n  @media(width <= 768px){\n    .custom-video-text{\n      padding-left: 20px;\n    }\n    .custom-video-text .subhead{\n      width: 60%;\n    }\n    .custom-video-text .heading{\n      width:80%;\n    }\n  }\n<\/style>\n\n<div class=\"custom-video-text\">\n  <img src=\"{{ 'video-subheading.png' | asset_url }}\" class=\"subhead\" alt=\"subheading\"\/>\n  <img src=\"{{ 'video-heading.png' | asset_url }}\" class=\"heading\" alt=\"subheading\"\/>\n<\/div>"}},"subheading_XeyKmG":{"type":"subheading","disabled":true,"settings":{"text":"BLACK FRIDAY <strong>SALE<\/strong>","text_align":"left","text_size":40,"text_color":"","show_bg":false,"background_color":""}},"heading_dzigcj":{"type":"heading","disabled":true,"settings":{"text":"UP TO <br><strong>60%<\/strong> OFF","heading_tag":"h1","text_align":"left","text_size":100,"text_color":""}},"subheading_A9E8CX":{"type":"subheading","disabled":true,"settings":{"text":"SITEWIDE","text_align":"center","text_size":25,"text_color":"#ffffff","show_bg":true,"background_color":"#000000"}},"3a9b11c4-6d7d-43f0-bdd4-2129af5251be":{"type":"play","disabled":true,"settings":{"icon_color":"#ffffff"}}},"block_order":["liquid_N6hpzE","subheading_XeyKmG","heading_dzigcj","subheading_A9E8CX","3a9b11c4-6d7d-43f0-bdd4-2129af5251be"],"custom_css":["p.h6 {letter-spacing: 0px;}","p.h1 {letter-spacing: 0;}"],"settings":{"add-custom-attribute":"data-aos=\"fade-up\"  data-aos-duration=\"1500\" id=\"hero-video-home\"","autoplay":true,"show_controls":false,"video_size":"fill","external_video_url":"","poster":"shopify:\/\/shop_images\/Main_Banner_Size_Template.png","poster-mobile":"shopify:\/\/shop_images\/Main_Banner_Size_Template.png","text_color":"#ffffff"}},"b21cc6f7-3494-4ac4-8d55-7f3770110f25":{"type":"custom-liquid","custom_css":[".header-space-video-top {width: 100%; height: 100vh;}"],"settings":{"separate_section_with_border":false,"remove_vertical_spacing":true,"remove_horizontal_spacing":true,"liquid":"{% if template == \"index\" %}\n<div class=\"header-space-video-top\"><\/div>\n{% endif %}","text_alignment":"center"}},"header":{"type":"header","blocks":{"9e356a56-1e0b-4d2f-ace0-884900da82ec":{"type":"mega_menu","settings":{"menu_item":"EXPLORE","images_position":"left","image_1_heading":"","image_1_text":"","image_1_link":"","image_2_heading":"","image_2_text":"","image_2_link":""}},"mega_menu_PjggCU":{"type":"mega_menu","settings":{"menu_item":"COLLECTIONS","images_position":"right","image_1_heading":"","image_1_text":"","image_1_link":"","image_2_heading":"","image_2_text":"","image_2_link":""}}},"block_order":["9e356a56-1e0b-4d2f-ace0-884900da82ec","mega_menu_PjggCU"],"custom_css":[],"settings":{"topbar":"","topbar2":"","topbar3":"","enable_sticky":true,"show_separation_border":false,"reduce_padding":false,"logo":"shopify:\/\/shop_images\/sss.svg","logo_max_width":370,"logo_mobile_max_width":140,"menu":"main-menu-4","sidebar_menu":"","menu_open_trigger":"hover","enable_search":true,"sidebar_text_font":"heading","sidebar_show_dividers":true,"layout":"logo_center_navigation_inline","show_icons":true,"show_country_selector":false,"show_country_name":false,"show_country_flag":false,"show_locale_selector":false,"transparent_header_text_color":"#1c1c1c"}}},"order":["cws_moving_text_BNztiE","cws_announcement_bar_RU9FQH","announcement-bar","c0961a3c-0f4b-4159-b3bf-5015ec6e725d","b21cc6f7-3494-4ac4-8d55-7f3770110f25","header"]}
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "cws_moving_text_BNztiE": {
+      "type": "cws-moving-text",
+      "blocks": {
+        "cws_moving_text_V6PzTY": {
+          "type": "CWS_moving_text",
+          "settings": {
+            "moving_text": "ENDING SOON: BOXING DAY 20% OFF"
+          }
+        },
+        "cws_moving_text_neK9rp": {
+          "type": "CWS_moving_text",
+          "settings": {
+            "moving_text": "FREE SHIPPING"
+          }
+        },
+        "cws_moving_text_Hy7zWn": {
+          "type": "CWS_moving_text",
+          "settings": {
+            "moving_text": "DISCOUNT APPLIED AT CHECKOUT"
+          }
+        },
+        "cws_moving_text_FVJAYV": {
+          "type": "CWS_moving_text",
+          "disabled": true,
+          "settings": {
+            "moving_text": "LIMITED TIME ONLY"
+          }
+        }
+      },
+      "block_order": [
+        "cws_moving_text_V6PzTY",
+        "cws_moving_text_neK9rp",
+        "cws_moving_text_Hy7zWn",
+        "cws_moving_text_FVJAYV"
+      ],
+      "disabled": true,
+      "name": "CWS Moving Text",
+      "settings": {
+        "background_color": "#ff0000",
+        "text_color": "#ffffff",
+        "show_dot": true,
+        "dot_color": "#ffffff",
+        "font_size": 16
+      }
+    },
+    "cws_announcement_bar_RU9FQH": {
+      "type": "cws-announcement-bar",
+      "blocks": {
+        "announcement_block_WLNgWn": {
+          "type": "announcement_block",
+          "settings": {
+            "announcement_text": "<strong>FREE WORLDWIDE DELIVERY</strong>",
+            "limit_to_country": "WW"
+          }
+        },
+        "announcement_block_DwQQYf": {
+          "type": "announcement_block",
+          "settings": {
+            "announcement_text": "<strong>FREE US SHIPPING ON ORDERS OVER $200 USD</strong>",
+            "limit_to_country": "US"
+          }
+        },
+        "announcement_block_gKppfK": {
+          "type": "announcement_block",
+          "disabled": true,
+          "settings": {
+            "announcement_text": "<strong>Extremely Limited:</strong> Exclusive Access to Limited Stock. Secure Now.",
+            "limit_to_country": "ALL"
+          }
+        },
+        "announcement_block_RYAjzX": {
+          "type": "announcement_block",
+          "disabled": true,
+          "settings": {
+            "announcement_text": "<strong>60% Off Exclusive: </strong>Limited Edition Edge Ear Cuff. First Time Ever at 60% Off.",
+            "limit_to_country": "ALL"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_block_WLNgWn",
+        "announcement_block_DwQQYf",
+        "announcement_block_gKppfK",
+        "announcement_block_RYAjzX"
+      ],
+      "name": "CWS Announcement Bar",
+      "settings": {
+        "bg_color": "#000000",
+        "text_color": "#ffffff",
+        "icon_size": 12,
+        "text_size": 12,
+        "top_padding": 7,
+        "bottom_padding": 7,
+        "auto_slide": true,
+        "slide_speed": 5,
+        "pause_on_hover": true,
+        "infinite_loop": true,
+        "slides_per_view": 1,
+        "slides_gap": 3
+      }
+    },
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "message-1": {
+          "type": "message",
+          "disabled": true,
+          "settings": {
+            "text": "BLACK FRIDAY SALE"
+          }
+        },
+        "message_aq8kNC": {
+          "type": "message",
+          "settings": {
+            "text": "LIMITED TIME ONLY"
+          }
+        },
+        "message_kgM7wA": {
+          "type": "message",
+          "disabled": true,
+          "settings": {
+            "text": "ONCE A YEAR SALE"
+          }
+        }
+      },
+      "block_order": [
+        "message-1",
+        "message_aq8kNC",
+        "message_kgM7wA"
+      ],
+      "disabled": true,
+      "settings": {
+        "enable_sticky": true,
+        "autoplay": true,
+        "cycle_speed": 2,
+        "desktop_font_size": 12,
+        "mobile_font_size": 10,
+        "background": "#000000",
+        "text_color": "#ffffff"
+      }
+    },
+    "c0961a3c-0f4b-4159-b3bf-5015ec6e725d": {
+      "type": "video-hero-home",
+      "blocks": {
+        "liquid_N6hpzE": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<style>\n  .custom-video-text{\n    display:flex;\n    align-items:start;\n    justify-content:center;\n    flex-direction:column;\n    padding-left: 50px;\n  }\n  .custom-video-text .subhead{\n    width: 20%;\n  }\n  .custom-video-text .heading{\n    width:30%;\n  }\n  @media(width <= 768px){\n    .custom-video-text{\n      padding-left: 20px;\n    }\n    .custom-video-text .subhead{\n      width: 60%;\n    }\n    .custom-video-text .heading{\n      width:80%;\n    }\n  }\n</style>\n\n<div class=\"custom-video-text\">\n  <img src=\"{{ 'video-subheading.png' | asset_url }}\" class=\"subhead\" loading=\"lazy\" decoding=\"async\" alt=\"\"/>\n  <img src=\"{{ 'video-heading.png' | asset_url }}\" class=\"heading\" loading=\"lazy\" decoding=\"async\" alt=\"\"/>\n</div>"
+          }
+        },
+        "subheading_XeyKmG": {
+          "type": "subheading",
+          "disabled": true,
+          "settings": {
+            "text": "BLACK FRIDAY <strong>SALE</strong>",
+            "text_align": "left",
+            "text_size": 40,
+            "text_color": "",
+            "show_bg": false,
+            "background_color": ""
+          }
+        },
+        "heading_dzigcj": {
+          "type": "heading",
+          "disabled": true,
+          "settings": {
+            "text": "UP TO <br><strong>60%</strong> OFF",
+            "heading_tag": "h1",
+            "text_align": "left",
+            "text_size": 100,
+            "text_color": ""
+          }
+        },
+        "subheading_A9E8CX": {
+          "type": "subheading",
+          "disabled": true,
+          "settings": {
+            "text": "SITEWIDE",
+            "text_align": "center",
+            "text_size": 25,
+            "text_color": "#ffffff",
+            "show_bg": true,
+            "background_color": "#000000"
+          }
+        },
+        "3a9b11c4-6d7d-43f0-bdd4-2129af5251be": {
+          "type": "play",
+          "disabled": true,
+          "settings": {
+            "icon_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "liquid_N6hpzE",
+        "subheading_XeyKmG",
+        "heading_dzigcj",
+        "subheading_A9E8CX",
+        "3a9b11c4-6d7d-43f0-bdd4-2129af5251be"
+      ],
+      "custom_css": [
+        "p.h6 {letter-spacing: 0px;}",
+        "p.h1 {letter-spacing: 0;}"
+      ],
+      "settings": {
+        "add-custom-attribute": "data-aos=\"fade-up\"  data-aos-duration=\"1500\" id=\"hero-video-home\"",
+        "autoplay": true,
+        "show_controls": false,
+        "video_size": "fill",
+        "external_video_url": "",
+        "poster": "shopify://shop_images/Main_Banner_Size_Template.png",
+        "poster-mobile": "shopify://shop_images/Main_Banner_Size_Template.png",
+        "text_color": "#ffffff"
+      }
+    },
+    "b21cc6f7-3494-4ac4-8d55-7f3770110f25": {
+      "type": "custom-liquid",
+      "custom_css": [
+        ".header-space-video-top {width: 100%; height: 100vh;}"
+      ],
+      "settings": {
+        "separate_section_with_border": false,
+        "remove_vertical_spacing": true,
+        "remove_horizontal_spacing": true,
+        "liquid": "{% if template == \"index\" %}\n<div class=\"header-space-video-top\"></div>\n{% endif %}",
+        "text_alignment": "center"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "9e356a56-1e0b-4d2f-ace0-884900da82ec": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "EXPLORE",
+            "images_position": "left",
+            "image_1_heading": "",
+            "image_1_text": "",
+            "image_1_link": "",
+            "image_2_heading": "",
+            "image_2_text": "",
+            "image_2_link": ""
+          }
+        },
+        "mega_menu_PjggCU": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "COLLECTIONS",
+            "images_position": "right",
+            "image_1_heading": "",
+            "image_1_text": "",
+            "image_1_link": "",
+            "image_2_heading": "",
+            "image_2_text": "",
+            "image_2_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "9e356a56-1e0b-4d2f-ace0-884900da82ec",
+        "mega_menu_PjggCU"
+      ],
+      "custom_css": [],
+      "settings": {
+        "topbar": "",
+        "topbar2": "",
+        "topbar3": "",
+        "enable_sticky": true,
+        "show_separation_border": false,
+        "reduce_padding": false,
+        "logo": "shopify://shop_images/sss.svg",
+        "logo_max_width": 370,
+        "logo_mobile_max_width": 140,
+        "menu": "main-menu-4",
+        "sidebar_menu": "",
+        "menu_open_trigger": "hover",
+        "enable_search": true,
+        "sidebar_text_font": "heading",
+        "sidebar_show_dividers": true,
+        "layout": "logo_center_navigation_inline",
+        "show_icons": true,
+        "show_country_selector": false,
+        "show_country_name": false,
+        "show_country_flag": false,
+        "show_locale_selector": false,
+        "transparent_header_text_color": "#1c1c1c"
+      }
+    }
+  },
+  "order": [
+    "cws_moving_text_BNztiE",
+    "cws_announcement_bar_RU9FQH",
+    "announcement-bar",
+    "c0961a3c-0f4b-4159-b3bf-5015ec6e725d",
+    "b21cc6f7-3494-4ac4-8d55-7f3770110f25",
+    "header"
+  ]
+}
