@@ -158,7 +158,7 @@ Supported variables
                           
                           <div class="prose">
                             {{ product.description }}
-                            <h5><b>Barcode:</b>{{ product.first_available_variant.barcode }}</h5>
+                            <p class="h5"><b>Barcode:</b>{{ product.first_available_variant.barcode }}</p>
                           </div>
                           <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                           {% if product.metafields.custom.reviews != blank %}
@@ -870,7 +870,7 @@ Supported variables
         <div class="prose">
         {{ product.description }}
         {% if product.first_available_variant.barcode != blank %}
-        <h5><b>Barcode:</b>{{ product.first_available_variant.barcode }}</h5>
+        <p class="h5"><b>Barcode:</b>{{ product.first_available_variant.barcode }}</p>
         {% endif %}
         </div>
         

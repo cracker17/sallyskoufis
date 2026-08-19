@@ -22,7 +22,7 @@
           "type": "text",
           "disabled": true,
           "settings": {
-            "text": "<h5>{{ product.metafields.custom.sub_title.value }}</h5>"
+            "text": "<p class=\"h5\">{{ product.metafields.custom.sub_title.value }}</p>"
           }
         },
         "price": {
@@ -106,7 +106,7 @@
         "text_QVFwmD": {
           "type": "text",
           "settings": {
-            "text": "<h4>FREE WORLDWIDE DELIVERY</h4>"
+            "text": "<p class=\"h4\">FREE WORLDWIDE DELIVERY</p>"
           }
         },
         "buy_buttons": {

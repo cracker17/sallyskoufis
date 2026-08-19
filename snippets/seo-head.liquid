@@ -130,7 +130,7 @@
   assign noindex_list = noindex_page_types | split: ','
 -%}
 
-<title>{{ seo_title }}</title>
+<title>{{ seo_title | escape_once }}</title>
 
 {%- if seo_description != blank -%}
   <meta name="description" content="{{ seo_description | escape_once }}">
@@ -170,46 +170,4 @@
     <link rel="alternate" hreflang="{{ locale.iso_code }}" href="{{ request.origin }}{{ locale_root }}{{ locale_path }}">
   {%- endfor -%}
   <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
-{%- endif -%}
-
-{%- comment -%}
-  Organization schema. The theme already emits WebSite and BreadcrumbList via microdata-schema,
-  but nothing tied the storefront to the brand entity - no logo, no social profiles.
-{%- endcomment -%}
-{%- if request.page_type == 'index' -%}
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": {{ brand | json }},
-      "url": {{ request.origin | append: routes.root_url | json }}
-      {%- if settings.seo_logo != blank -%}
-        , "logo": {{ settings.seo_logo | image_url: width: 512 | prepend: 'https:' | json }}
-      {%- endif -%}
-      {%- if shop.description != blank -%}
-        , "description": {{ shop.description | strip_html | json }}
-      {%- endif -%}
-      {%- liquid
-        assign social_settings = 'social_instagram,social_facebook,social_tiktok,social_pinterest,social_youtube,social_linkedin,social_twitter,social_threads' | split: ','
-        assign social_handles = ''
-
-        for key in social_settings
-          assign value = settings[key]
-
-          if value != blank
-            assign social_handles = social_handles | append: value | append: '~'
-          endif
-        endfor
-
-        assign social_list = social_handles | split: '~'
-      -%}
-      {%- if social_list.size > 0 -%}
-        , "sameAs": [
-          {%- for handle in social_list -%}
-            {{ handle | json }}{%- unless forloop.last -%},{%- endunless -%}
-          {%- endfor -%}
-        ]
-      {%- endif -%}
-    }
-  </script>
 {%- endif -%}
