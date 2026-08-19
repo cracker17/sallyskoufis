@@ -72,7 +72,7 @@ Supported variables
         {%- render 'product-badges', product: product, vertical: true -%}
       {%- endif -%}
 
-      <a href="{{ product.url }}" class="product-card__media" data-instant>
+      <a href="{{ product.url }}" class="product-card__media" data-instant aria-label="{{ product.title | escape }}">
         {%- capture sizes -%}
           {%- if stacked -%}
             (max-width: 699px) calc(100vw / {{ section.settings.products_per_row_mobile }}), (max-width: 999px) calc(100vw / {{ 3 | at_most: section.settings.products_per_row_desktop | default: 3 }} - 64px), calc((100vw - 96px) / {{ section.settings.products_per_row_desktop | default: 3 }} - (24px / {{ section.settings.products_per_row_desktop | default: 3 }} * {{ section.settings.products_per_row_desktop | default: 3 | minus: 1 }}))
@@ -211,8 +211,8 @@ Supported variables
   {% else %}
     <div class="product-card__figure">
       {%- capture main_image_classes -%}product-card__image product-card__image--primary {% if settings.product_image_aspect_ratio contains 'crop' %}object-cover{% endif %} aspect-{{ settings.product_image_aspect_ratio | split: '_' | first }}{%- endcapture -%}
-      <a href="{{ product.url }}" class="product-card__media" data-instant>
-          <img src="{{ 'no-avail-image.png' | file_img_url: 'master' }}" loading="lazy" class="{{ main_image_classes }}"> 
+      <a href="{{ product.url }}" class="product-card__media" data-instant aria-label="{{ product.title | escape }}">
+          <img src="{{ 'no-avail-image.png' | file_img_url: 'master' }}" loading="lazy" class="{{ main_image_classes }}" alt="{{ product.title | escape }}"> 
       </a>
     </div>
   {% endcomment %}
@@ -254,7 +254,7 @@ Supported variables
                             {% endif %}
                             {% assign swatch_count = swatch_count | plus: 1 %}
                             {% if swatch_count == 5 %}
-                              <a class="view-more-color-product-card small-text" href="{{ product.url }}">more {%- render 'icon' with 'plus', width: 9, direction_aware: true -%} </a>
+                              <a class="view-more-color-product-card small-text" href="{{ product.url }}" aria-label="{{ 'See more colours of' }} {{ product.title | escape }}">more {%- render 'icon' with 'plus', width: 9, direction_aware: true -%} </a>
                             {% endif %}
                           {% endif %}
                         {% endfor %}

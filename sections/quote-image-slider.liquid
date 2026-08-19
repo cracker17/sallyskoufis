@@ -7,7 +7,7 @@
     <div class="quote-image-slider-wrapp">
 
         <div class="quote-content-wrap">
-            <img src="{{ 'quote1.png' | asset_url }}" loading="lazy" >
+            <img src="{{ 'quote1.png' | asset_url }}" loading="lazy" alt="" aria-hidden="true" loading="lazy">
             {{ section.settings.quote }}
         </div>
 
@@ -17,7 +17,7 @@
                 <div class="quote-image-slider">
                 {% for block in section.blocks %}
                         <div>  
-                            <img loading="lazy" src="{{ block.settings.logo | img_url: 'master' }}">
+                            <img loading="lazy" decoding="async" src="{{ block.settings.logo | image_url: width: 600 }}" alt="{{ block.settings.logo.alt | escape }}">
                         </div>
                 {% endfor %}
                 </div>

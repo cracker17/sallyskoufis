@@ -160,7 +160,7 @@ Supported variables
                             {{ product.description }}
                             <h5><b>Barcode:</b>{{ product.first_available_variant.barcode }}</h5>
                           </div>
-                          <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                          <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                           {% if product.metafields.custom.reviews != blank %}
                             <div class="testimonial-slider">
                               {% for review in product.metafields.custom.reviews.value  %}
@@ -169,7 +169,7 @@ Supported variables
                             </div>
                           {% else %}
                             {% if product.type == "Rings" %}  
-                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                               <div class="testimonial-slider">
                                   <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>—  Viola | Australia</span></p></div></div>
                                   <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
@@ -178,7 +178,7 @@ Supported variables
                                   <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
                               </div>
                             {% else %}
-                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                               <div class="testimonial-slider">
                                   <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be. <span>—  Linda | Sweden</span></p></div></div>
                                   <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>
@@ -737,7 +737,7 @@ Supported variables
                   {{- block.settings.modal_content -}}
 
                   {% if block.settings.image_picker_modal != blank %}
-                    <img width="100%" height="100%" src="{{ block.settings.image_picker_modal | img_url: "master" }}">
+                    <img loading="lazy" decoding="async" style="width:100%;height:100%" src="{{ block.settings.image_picker_modal | image_url: width: 1200 }}" alt="{{ block.settings.image_picker_modal.alt | escape }}">
                   {% endif %}
 
                 </div>
@@ -791,7 +791,7 @@ Supported variables
           {%- when 'reviews_slider' -%}
           <div class="prod_page_review_slider">
             {% if product.metafields.custom.reviews != blank %}
-                  <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                  <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                   <div class="testimonial-slider">
                     {% for review in product.metafields.custom.reviews.value  %}
                       <div><div class="prose"><p>{{ review }}</p></div></div>
@@ -799,7 +799,7 @@ Supported variables
                   </div>
               {% else %}
                   {% if product.type == "Rings" %}  
-                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                     <div class="testimonial-slider">
                         <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>— Viola | Australia</span></p></div></div>
                         <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
@@ -808,7 +808,7 @@ Supported variables
                         <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
                     </div>
                   {% else %}
-                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
                     <div class="testimonial-slider">
                         <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be. <span>—  Linda | Sweden</span></p></div></div>
                         <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>
@@ -875,7 +875,7 @@ Supported variables
         </div>
         
         {% if product.metafields.custom.reviews != blank %}
-            <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+            <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
             <div class="testimonial-slider">
               {% for review in product.metafields.custom.reviews.value  %}
                 <div><div class="prose"><p>{{ review }}</p></div></div>
@@ -883,7 +883,7 @@ Supported variables
             </div>
         {% else %}
             {% if product.type == "Rings" %}  
-              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
               <div class="testimonial-slider">
                   <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>— Viola | Australia</span></p></div></div>
                   <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
@@ -892,7 +892,7 @@ Supported variables
                   <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
               </div>
             {% else %}
-              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc" alt="" aria-hidden="true" loading="lazy">
               <div class="testimonial-slider">
                   <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be.<span> —  Linda | Sweden</span></p></div></div>
                   <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>

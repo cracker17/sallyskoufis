@@ -6,7 +6,7 @@
     {%- for block in section.blocks -%}
       <div class="inside-image-prod-slider">
           {%- render 'product-card', product: block.settings.product-left, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block, show_secondary_image: false -%}
-          <img loading="lazy" class="img-center" src="{{ block.settings.image-center | img_url: 'master' }}">
+          <img loading="lazy" decoding="async" class="img-center" src="{{ block.settings.image-center | image_url: width: 1200 }}" alt="{{ block.settings.image-center.alt | escape }}">
           {%- render 'product-card', product: block.settings.product-right, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block, show_secondary_image: false -%}
       </div>
     {%- endfor -%}
@@ -72,7 +72,7 @@
             mouseDrag: false,
             speed: 1500,
             controls: true,
-            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}'>","<img src='{{ "right-arrow-svg.svg" | asset_url }}'>"],
+            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">","<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">"],
             autoplayTimeout: 5000,
             slideBy: 'page'
           });

@@ -63,7 +63,7 @@
                   <div class="prose prose--tight {{ block.settings.text_position }}">
                     
                     {% if block.settings.image_above_heading != blank %}
-                      <img class="img-inside-prose-impact" src="{{block.settings.image_above_heading | img_url: 'master' }}">
+                      <img class="img-inside-prose-impact" loading="lazy" decoding="async" src="{{ block.settings.image_above_heading | image_url: width: 900 }}" alt="{{ block.settings.image_above_heading.alt | escape }}">
                     {% endif %}
                     
                     

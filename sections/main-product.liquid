@@ -2226,7 +2226,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoHeight: true,
             speed: 1000,
             autoplayTimeout: 5500,
-            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}'>", "<img src='{{ "right-arrow-svg.svg" | asset_url }}'>"],
+            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">", "<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">"],
             responsive: {
               0: {
                 items: 1,
@@ -2252,7 +2252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
       {% if product.metafields.custom.colors_images != blank %}
         {% for imagess in product.metafields.custom.colors_images.value %}
-          colorsImages.push("{{ imagess | img_url: 'master' }}");
+          colorsImages.push("{{ imagess | image_url: width: 1200 }}");
         {% endfor %}
       {% endif %}
     
