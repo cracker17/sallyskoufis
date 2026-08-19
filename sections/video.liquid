@@ -68,7 +68,7 @@
               {%- endif -%}
 
             {%- when 'image_video' -%}
-              <img loading="lazy" decoding="async" class="video-image-custom" src="{{ block.settings.image_video | image_url: width: 1200 }}" alt="{{ block.settings.image_video.alt | escape }}">
+              {{- block.settings.image_video | image_url: width: 1200 | image_tag: class: 'video-image-custom', loading: 'lazy', decoding: 'async', widths: '400,600,800,1000,1200' -}}
                       
           {%- endcase -%}
         {%- endfor -%}

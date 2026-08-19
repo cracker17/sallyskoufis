@@ -153,11 +153,14 @@
       ------------------------------------------------------------------------------------------
     {%- endcomment -%}
 
+    {%- capture bespoke_lead_time -%}{{ product.metafields.custom.bespoke_lead_time }}{%- endcapture -%}
+    {%- capture allow_backorder -%}{{ product.metafields.custom.allow_backorder }}{%- endcapture -%}
+
     <script>
       window.themeCustom = {
         pageType: {{ request.page_type | json }},
-        bespokeLeadTime: {{ product.metafields.custom.bespoke_lead_time | default: '' | json }},
-        allowBackorder: {{ product.metafields.custom.allow_backorder | default: '' | json }}
+        bespokeLeadTime: {{ bespoke_lead_time | json }},
+        allowBackorder: {{ allow_backorder | json }}
         {%- if product -%}
           , productTitle: {{ product.title | json }}
           , productId: {{ product.id | json }}
@@ -175,12 +178,6 @@
     <script src="{{ 'aos.js' | asset_url }}" defer></script>
     <script src="{{ 'tinyslidercustom.js' | asset_url }}" defer></script>
     <script src="{{ 'custom.js' | asset_url }}" defer></script>
-
-    <script>
-      window.addEventListener('load', function () {
-        if (window.AOS) window.AOS.init();
-      }, { once: true });
-    </script>
 
     {%- comment -%}
       ------------------------------------------------------------------------------------------

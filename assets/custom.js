@@ -307,7 +307,14 @@
     });
   }
 
+  /* AOS ships its own DOM-ready handling; init it here so it runs at the same point in the
+     lifecycle it did when it was an inline script. */
+  function initAos() {
+    if (window.AOS) window.AOS.init();
+  }
+
   ready(function () {
+    initAos();
     timesact();
     headerHighlight();
     heroCrossfade();

@@ -9,7 +9,7 @@
     <div class="logo-slider-komradd">
       {% for block in section.blocks %}
             <div>  
-                <img loading="lazy" decoding="async" src="{{ block.settings.logo | image_url: width: 480 }}" alt="{{ block.settings.logo.alt | default: shop.name | escape }}">
+                {{- block.settings.logo | image_url: width: 480 | image_tag: loading: 'lazy', decoding: 'async', widths: '240,360,480', alt: block.settings.logo.alt | default: shop.name -}}
             </div>
       {% endfor %}
     </div>

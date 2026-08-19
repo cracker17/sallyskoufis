@@ -136,7 +136,7 @@
     },
     "faceting": {
       "products_per_page": "Produits par page",
-      "filters_category": "Filtres et tri",
+      "filters_and_sorting_category": "Filtres et tri",
       "desktop_layout": "Mode d'affichage desktop",
       "desktop_layout_options": {
         "sidebar": "Barre latérale",

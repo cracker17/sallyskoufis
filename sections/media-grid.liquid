@@ -63,7 +63,7 @@
                   <div class="prose prose--tight {{ block.settings.text_position }}">
                     
                     {% if block.settings.image_above_heading != blank %}
-                      <img class="img-inside-prose-impact" loading="lazy" decoding="async" src="{{ block.settings.image_above_heading | image_url: width: 900 }}" alt="{{ block.settings.image_above_heading.alt | escape }}">
+                      {{- block.settings.image_above_heading | image_url: width: 900 | image_tag: class: 'img-inside-prose-impact', loading: 'lazy', decoding: 'async', widths: '300,450,600,900' -}}
                     {% endif %}
                     
                     
