@@ -1,0 +1,95 @@
+{{ 'prod-two-slider.css' | asset_url | stylesheet_tag }}
+
+<div {% if section.settings.add-custom-attribute != blank %}{{section.settings.add-custom-attribute}}{% endif %}   class="container">
+
+  <div class="image-prod-slider-outer">
+    {%- for block in section.blocks -%}
+      <div class="inside-image-prod-slider">
+          {%- render 'product-card', product: block.settings.product-left, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block, show_secondary_image: false -%}
+          <img loading="lazy" class="img-center" src="{{ block.settings.image-center | img_url: 'master' }}">
+          {%- render 'product-card', product: block.settings.product-right, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block, show_secondary_image: false -%}
+      </div>
+    {%- endfor -%}
+  </div>
+  
+</div>
+
+{% schema %}
+{
+  "name": "Image Prod Slider",
+  "class": "section image-prod-slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "add-custom-attribute",
+      "label": "Add Custom Attribute for animation"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-prod",
+      "name": "Image Prod",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product-left",
+          "label": "Product Left"
+        },
+        {
+          "type": "image_picker",
+          "id": "image-center",
+          "label": "Image Center"
+        },
+        {
+          "type": "product",
+          "id": "product-right",
+          "label": "Product Right"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Image Prod Slider",
+    "category": "Text"
+  }]
+
+}
+{% endschema %}
+
+
+
+<script>
+
+  
+        document.querySelectorAll('.image-prod-slider-outer').forEach(slider => {
+          var tnsInstance2 = tns({
+            container: slider,
+            items: 1,
+            loop: true,
+            autoplay: true,
+            autoplayButtonOutput: false,
+            preventActionWhenRunning: true,
+            mouseDrag: false,
+            speed: 1500,
+            controls: true,
+            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}'>","<img src='{{ "right-arrow-svg.svg" | asset_url }}'>"],
+            autoplayTimeout: 5000,
+            slideBy: 'page'
+          });
+
+
+           var buttons2 = document.querySelectorAll('.image-prod-slider .tns-nav button')
+              buttons2.forEach(function() {
+                this.addEventListener('click', function(e) {
+                    tnsInstance2.play()
+               })
+            })
+
+          
+        });
+
+       
+
+   
+
+</script>

@@ -1,0 +1,90 @@
+{{ 'quote-image-slider.css' | asset_url | stylesheet_tag }}
+
+
+
+<div class="container {% if section.settings.add-class-parent != blank %}{{ section.settings.add-class-parent }}{% endif %} ">
+
+    <div class="quote-image-slider-wrapp">
+
+        <div class="quote-content-wrap">
+            <img src="{{ 'quote1.png' | asset_url }}" loading="lazy" >
+            {{ section.settings.quote }}
+        </div>
+
+
+        <div class="image-slider-wrap">
+            {% if section.blocks.size > 0 %} 
+                <div class="quote-image-slider">
+                {% for block in section.blocks %}
+                        <div>  
+                            <img loading="lazy" src="{{ block.settings.logo | img_url: 'master' }}">
+                        </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+  
+  
+  
+</div>
+
+{% schema %}
+{
+  "name": "Quote Image Slider",
+  "class": "section quote-image-slider-komradd-outer",
+  "settings": [
+    {
+        "type": "richtext",
+        "id": "quote",
+        "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "add-class-parent",
+      "label": "Add Class Parent"
+    }
+ ],
+  "max_blocks": 30,
+   "blocks": [
+        {
+        "name": "Logo",
+        "type": "logo",
+        "settings": [
+            {
+              "type": "image_picker",
+              "id": "logo",
+              "label": "Logo"
+            }
+        ]
+     }
+   ],
+  "presets": [{
+    "name": "Quote Image Slider",
+    "category": "Text"
+  }]
+
+}
+{% endschema %}
+
+<script>
+
+    document.querySelectorAll('.quote-image-slider').forEach(slider => {
+        tns({
+          container: slider,
+          items: 1,
+          loop: true,
+          autoplay: true,
+          autoplayButtonOutput: false,
+          preventActionWhenRunning: true,
+          mouseDrag: true,
+          speed: 1000,
+          controls: true,
+          autoplayTimeout: 3000
+            
+        });
+      });
+    
+
+</script>

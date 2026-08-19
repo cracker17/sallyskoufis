@@ -1,0 +1,320 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h2"
+          }
+        },
+        "8ab97e0c-6897-41f1-b8ba-6f2b36db49d0": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<h5>{{ product.metafields.custom.sub_title.value }}</h5>"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "afterpay_on_site_messaging_payments_messaging_j46UxJ": {
+          "type": "shopify://apps/afterpay-on-site-messaging/blocks/payments-messaging/f45a5524-d177-4475-bf59-281efd2215a8",
+          "settings": {
+            "text_align": "inherit",
+            "margin_top": 0,
+            "margin_bottom": 16,
+            "color": "",
+            "size": "xs",
+            "intro_text": "or",
+            "show_interest_free": false,
+            "payment_amount_is_bold": false,
+            "show_with": true,
+            "logo_type": "lockup",
+            "logo_theme": "black-on-white",
+            "modal_link_style": "circled-info-icon",
+            "modal_theme": "mint",
+            "breakpoint": 749,
+            "text_align_mobile": "inherit",
+            "margin_top_mobile": 0,
+            "margin_bottom_mobile": 16,
+            "show_lower_limit": true,
+            "show_upper_limit": true,
+            "show_if_outside_limits": true,
+            "product": "{{product}}"
+          }
+        },
+        "payment_terms": {
+          "type": "payment_terms",
+          "disabled": true,
+          "settings": {}
+        },
+        "separator": {
+          "type": "separator",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "collapse_content": false,
+            "show_below_gallery": false
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "selector_type": "block",
+            "color_selector_type": "color",
+            "size_chart_page": "size-guide"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "disabled": true,
+          "settings": {}
+        },
+        "modal_4zc8DA": {
+          "type": "modal",
+          "disabled": true,
+          "settings": {
+            "button_title": "SIZE GUIDE",
+            "button_style": "link",
+            "stretch_button": true,
+            "button_background": "",
+            "button_text_color": "",
+            "modal_title": "SIZE GUIDE",
+            "modal_content": "<p> </p>",
+            "image_picker_modal": "shopify://shop_images/ringsizeguide.jpg",
+            "size_guide_link": false
+          }
+        },
+        "text_QVFwmD": {
+          "type": "text",
+          "settings": {
+            "text": "<h4>FREE WORLDWIDE DELIVERY</h4>"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": false,
+            "show_gift_card_recipient": true,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "image_Ktc3YP": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/payment1.png",
+            "alignment": "center",
+            "width_mode": "full_width",
+            "max_width": 440,
+            "mobile_max_width": 200
+          }
+        },
+        "accordion_BefJJt": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "icon": "none",
+            "title": "DETAILS",
+            "content": "<div class=\"new-prod-custom-details\">{{product.description}}\n{% if product.metafields.custom.description_barcode != blank %}\n<p>Barcode: {{ product.metafields.custom.description_barcode }}</p>\n</div>\n{% endif %}",
+            "page": ""
+          }
+        },
+        "accordion_DPDeAk": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "icon": "none",
+            "title": "DESCRIPTION",
+            "content": "<div class=\"new-prod-custom-desc\">\n{{product.metafields.custom.custom_description_richtext | metafield_tag }}\n</div>",
+            "page": ""
+          }
+        },
+        "accordion_dXKniR": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "icon": "none",
+            "title": "NEED HELP?",
+            "content": "<div class=\"need-help-outer\">\n<div class=\"need-help\">\n<p>{%- render 'icon' with 'whatsapp', width: 12 -%} <a href=\"https://wa.me/61485866886?text=%20https%3A%2F%2Fsallyskoufis.com%2Fpages%2Fconcierge%23\">Whatsapp +61 485 866 886</a></p>\n<p>{%- render 'icon' with 'picto-mobile-phone', width: 12 -%} <a href=\"sms:61485866886?body=\">SMS (+61) 485 866 886</a></p>\n<p>{%- render 'icon' with 'picto-phone', width: 12 -%} <a href=\"tel:+61485866886\">Call (+61) 485 866 886</a></p>\n<p>{%- render 'icon' with 'picto-jewelry', width: 12 -%} <a href=\"/pages/concierge?#contact-form\">Contact a Product Styling Expert?</a></p>\n\n</div>\n</div>",
+            "page": ""
+          }
+        },
+        "393f560c-989d-4e43-8ee8-33f71e0c98c5": {
+          "type": "bespoke",
+          "settings": {}
+        },
+        "reviews_slider_YKtbKJ": {
+          "type": "reviews_slider",
+          "settings": {}
+        },
+        "d29fd5a0-f6c1-47e3-ad29-ebd1d71a1c61": {
+          "type": "feature_with_icon",
+          "disabled": true,
+          "settings": {
+            "text": "<strong>FREE SHIPPING</strong> GLOBAL EXPRESS",
+            "link": "",
+            "icon": "picto-delivery-truck",
+            "icon_width": 32,
+            "background": "#ffffff",
+            "text_color": "#6b6b6b",
+            "border_color": ""
+          }
+        },
+        "f6d8d90e-685d-4ee4-a5f9-f0d9022d0bea": {
+          "type": "feature_with_icon",
+          "disabled": true,
+          "settings": {
+            "text": "<strong>SUSTAINABLY</strong> HANDMADE",
+            "link": "",
+            "icon": "picto-love",
+            "custom_icon": "shopify://shop_images/646717-200.png",
+            "icon_width": 32,
+            "background": "#ffffff",
+            "text_color": "#6b6b6b",
+            "border_color": ""
+          }
+        },
+        "a8e3b07b-fe86-4b2f-80d4-f48f96597073": {
+          "type": "feature_with_icon",
+          "disabled": true,
+          "settings": {
+            "text": "<strong>GIFT</strong> PACKAGED",
+            "link": "",
+            "icon": "picto-gift",
+            "icon_width": 32,
+            "background": "#ffffff",
+            "text_color": "#6b6b6b",
+            "border_color": ""
+          }
+        },
+        "dcb6db8d-0d87-4129-afaa-feed1759364a": {
+          "type": "product-popups",
+          "disabled": true,
+          "settings": {
+            "cstm-impact-subhead": "WELCOME TO THE NEW WORLD OF CONSCIOUS MODERN LUXURY.",
+            "cstm-delivery": "<p>Enjoy <strong>Complimentary Express Global Shipping</strong> for orders placed on the website.  All our products are shipped with <strong>Complimentary Signature Gift Packaging</strong> with our pleasure.</p><p><em><strong>Shipping</strong></em><br/>All orders are processed Monday through Friday, excluding weekends and holidays. Please note the delivery time of your order will be stated in the checkout and with confirmation tracking via email. </p><p>For further information, please contact our client Concierge on <strong>+614 8586 6886</strong> or via online chat <a href=\"https://wa.me/61485866886\" target=\"_blank\" title=\"https://wa.me/61485866886\">https://wa.me/61485866886 </a>to arrange your order.</p><p><em><strong>Returns</strong></em><em><br/></em>Full price items are accepted for credit or exchange to non-exclusive pieces in the country where they were originally purchased, if returned in saleable condition within 20 days, accompanied by a sales receipt. Some exclusions may apply. A new order can be placed again via our website or calling Concierge on +614 8586 6886. For more details, read our return policy.</p><p></p>",
+            "cstm-email": "Email us at         <a href=\"mailto:concierge@sallyskoufis.com\" title=\"mailto:concierge@sallyskoufis.com\">concierge@sallyskoufis.com</a>",
+            "cstm-phone": "Call us at  <a href=\"tel:+61485866886\" title=\"tel:+61485866886\">+61 485 866 886</a>",
+            "cstm-hours": "Monday - Friday <strong>8:00AM - 5:00PM AEST</strong>"
+          }
+        },
+        "3dcd7950-7a7a-43ab-b4ae-58a953619dd2": {
+          "type": "complementary_products",
+          "disabled": true,
+          "settings": {
+            "title": "Pairs well with",
+            "products_count": 1,
+            "show_below_gallery": false,
+            "stack_products": false,
+            "show_quick_buy": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "8ab97e0c-6897-41f1-b8ba-6f2b36db49d0",
+        "price",
+        "afterpay_on_site_messaging_payments_messaging_j46UxJ",
+        "payment_terms",
+        "separator",
+        "description",
+        "variant_picker",
+        "quantity_selector",
+        "modal_4zc8DA",
+        "text_QVFwmD",
+        "buy_buttons",
+        "image_Ktc3YP",
+        "accordion_BefJJt",
+        "accordion_DPDeAk",
+        "accordion_dXKniR",
+        "393f560c-989d-4e43-8ee8-33f71e0c98c5",
+        "reviews_slider_YKtbKJ",
+        "d29fd5a0-f6c1-47e3-ad29-ebd1d71a1c61",
+        "f6d8d90e-685d-4ee4-a5f9-f0d9022d0bea",
+        "a8e3b07b-fe86-4b2f-80d4-f48f96597073",
+        "dcb6db8d-0d87-4129-afaa-feed1759364a",
+        "3dcd7950-7a7a-43ab-b4ae-58a953619dd2"
+      ],
+      "custom_css": [
+        ".product-info__block-item[data-block-type=\"text\"] p {font-size: 16px;}",
+        ".product-info__block-item[data-block-type=\"text\"] {margin-top: 0;}",
+        "h1 {margin-bottom: -10px;}",
+        ".product-gallery__thumbnail-list {display: none;}"
+      ],
+      "settings": {
+        "add-custom-attribute": "data-aos=\"fade-right\" data-aos-duration=\"1500\"",
+        "add-class-parent": "",
+        "container_size": "lg",
+        "product_info_size": 50,
+        "show_sticky_add_to_cart": true,
+        "center_basic_info": false,
+        "desktop_media_layout": "grid",
+        "desktop_media_grid_gap": 30,
+        "mobile_controls": "dots",
+        "enable_media_autoplay": false,
+        "enable_video_looping": true,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 4
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "custom_css": [
+        ".container {margin-left: 0 !important; margin-right: 0 !important;}",
+        "product-recommendations {overflow: hidden;}",
+        "product-list {gap: 5px; justify-content: space-between;}",
+        "h2 {font-size: 20pt !important; line-height: 140% !important;}",
+        "@media (min-width: 750px) {.product-card {display: unset; width: calc(25vw - 5px); }}",
+        "@media (max-width: 749px) {.container {margin-left: 0.5rem !important; margin-right: 0.5rem !important; } h2 {font-size: 16pt !important; }}"
+      ],
+      "settings": {
+        "separate_section_with_border": false,
+        "hide_product_information": false,
+        "stack_products": true,
+        "recommendations_count": 8,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0,
+        "vertical_spacing_factor": 0,
+        "subheading": "",
+        "title": "Suggested for you",
+        "content": ""
+      }
+    },
+    "bec49238-e688-4c42-aab8-3c8a5bdca6d8": {
+      "type": "custom-reco",
+      "disabled": true,
+      "settings": {
+        "add-custom-attribute": "data-aos=\"fade-up\" data-aos-duration=\"1500\"",
+        "add-class-parent": "",
+        "heading": "SUGGESTED FOR YOU"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "bec49238-e688-4c42-aab8-3c8a5bdca6d8"
+  ]
+}

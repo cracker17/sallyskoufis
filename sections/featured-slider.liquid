@@ -1,0 +1,90 @@
+
+
+
+<div {% if section.settings.add-custom-attribute != blank %}{{section.settings.add-custom-attribute}}{% endif %}  class="container">
+    <div class="prod-coll-slider">
+        {%- for product in section.settings.cllection.products -%}
+        
+            {%- render 'product-card', product: product, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block -%}
+      
+        {%- endfor -%}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Feat Coll Slider",
+  "class": "section featuerd-collection-slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "add-custom-attribute",
+      "label": "Add Custom Attribute for animation"
+    },
+    {
+        "type": "collection",
+        "id": "cllection",
+        "label": "Collection"
+    }
+ ],
+  "presets": [{
+    "name": "Feat Coll Slider",
+    "category": "Text"
+  }]
+
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+<script>
+
+    document.querySelectorAll('.prod-coll-slider').forEach(slider => {
+        var tnsInstance = tns({
+          container: slider,
+          items: 4,
+          loop: true,
+          autoplay: true,
+          autoplayButtonOutput: false,
+          preventActionWhenRunning: true,
+          mouseDrag: false,
+          speed: 1500,
+          controls: true,
+          controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}'>","<img src='{{ "right-arrow-svg.svg" | asset_url }}'>"],
+          autoplayTimeout: 5000,
+          slideBy: 'page',
+          responsive: {
+            0: {
+              items: 1,
+              gutter: 5
+            },
+            900: {
+              items: 2,
+              gutter: 5
+            },
+            1200: {
+              items: 3,
+              gutter: 5
+            },
+            1300: {
+              items: 4,
+              gutter: 5
+            }
+          }
+        });
+
+       var buttons = document.querySelectorAll('.featuerd-collection-slider .tns-nav button')
+      	  buttons.forEach(function() {
+      		this.addEventListener('click', function(e) {
+      			tnsInstance.play()
+           })
+    	})
+      
+      
+      });
+
+ 
+    
+
+</script>

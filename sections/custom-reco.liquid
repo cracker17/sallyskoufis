@@ -1,0 +1,128 @@
+
+<style>
+  .prod-reco-custom h2{
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .prod-reco-custom{
+    padding-top: 50px;
+  
+  }
+</style>
+
+
+<div {% if section.settings.add-custom-attribute != blank %}{{section.settings.add-custom-attribute}}{% endif %}  class="{% if section.settings.add-class-parent != blank %}{{ section.settings.add-class-parent }}{% endif %}  container">
+  <product-recommendations class="block " product="{{ product.id }}" limit="{{ section.settings.recommendations_count }}" intent="related">
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+
+
+      <h2 class="h2">{{section.settings.heading}}</h2>
+
+      <div class="prod-reco-slider">
+        {%- for product in recommendations.products -%}
+          <div>
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+
+    {%- endif -%}
+  </product-recommendations>
+
+  
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Prod Rec",
+  "class": "section prod-reco-custom",
+  "settings": [
+    {
+      "type": "text",
+      "id": "add-custom-attribute",
+      "label": "Add Custom Attribute for animation"
+    },
+    {
+      "type": "text",
+      "id": "add-class-parent",
+      "label": "Add Class Parent"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "heading",
+        "label": "Heading"
+    }
+ ],
+  "presets": [{
+    "name": "Prod Reco",
+    "category": "Text"
+  }]
+
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+<script>
+  // Wrap your code in a setTimeout function
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function() {
+        document.querySelectorAll('.prod-reco-slider').forEach(slider => {
+          tns({
+            container: slider,
+            items: 1,
+            controls: false,
+            nav: true,
+            autoplay: true,
+            slideBy: 'page',
+            speed: 1500,
+            autoHeight: true,
+            autoplayTimeout: 5000,
+            autoplayResetOnVisibility: true,
+            autoplayButtonOutput: true,
+            responsive: {
+              0: {
+                items: 2,
+                gutter: 10
+              },
+              768: {
+                items: 3,
+                gutter: 10
+              },
+              1100: {
+                items: 4,
+                gutter: 10
+              }
+            }
+          });
+        });
+
+        
+
+     }, 2000);
+  });
+
+
+
+  setTimeout(function() {
+// Select the hidden button element
+const elementToClick = document.querySelector('.prod-reco-custom product-recommendations button[data-action="start"]');
+
+// Check if the element exists before clicking it
+if (elementToClick) {
+  elementToClick.dispatchEvent(new Event('click'));
+} else {
+  console.error("Element not found.");
+}
+
+
+    }, 3000);
+</script>
+
+
+
+
+

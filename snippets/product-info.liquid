@@ -1,0 +1,1016 @@
+{%- comment -%}
+----------------------------------------------------------------------------------------------------------------------
+PRODUCT INFO
+----------------------------------------------------------------------------------------------------------------------
+
+This snippet renders all the blocks of a given product. It uses the blocks of the section currently in use (there is
+no need to manually pass the section as it is globally available)
+
+********************************************
+Supported variables
+********************************************
+
+* product: the product on which to render the information (if blank, it renders placeholder information)
+* center_basic_info: if true, the basic information (product title, vendor, price) are centered on mobile
+* has_content_below_gallery: if true, the product has extra information show below the gallery
+* allow_blocks: a list of blocks name to include. If none is passed, assumes to show all the blocks
+* update_url: if set to true, the URL on the page is updated when the variant changes (for best experience, this should
+              be only used on the product page for the main product
+{%- endcomment -%}
+
+{%- capture product_form_id -%}product-form-{{ product.id }}-{{ section.id }}{%- endcapture -%}
+
+<safe-sticky class="product-info {% if center_basic_info %}product-info--center{% endif %}">
+  <div class="product-info__block-list">
+    {%- liquid
+      assign inside_block_group_context = false
+      assign current_block_group_name = ''
+
+      if allow_blocks != blank
+        assign filtered_blocks = '' | split: ''
+
+        for block in section.blocks
+          if allow_blocks contains block.type
+            assign block_as_arr = block | sort
+            assign filtered_blocks = filtered_blocks | concat: block_as_arr
+          endif
+        endfor
+      else
+        assign filtered_blocks = section.blocks
+      endif
+    -%}
+
+    {%- for block in filtered_blocks -%}
+      {%- liquid
+        # Filter the blocks (if allow_blocks is set)
+        if allow_blocks
+          unless allow_blocks contains block.type
+            continue
+          endunless
+        endif
+
+        assign next_block_index = forloop.index0 | plus: 1
+        assign next_block = filtered_blocks[next_block_index]
+
+        if block.settings.show_below_gallery
+          continue
+        endif
+
+        comment
+        You can use your own condition to create smart grouping. When two or more blocks match the condition, they are
+        automatically grouped by a div that will take the desired class. This can even work for more than 2 elements
+        (for instance if you specify accordion follow by an accordion). The theme takes care of properly opening and
+        closing the group for proper HTML. In order to make it work, you need to create one condition explaining when
+        to enter into the group, and you need to indicate a block_group_class and block_group_name. Most of the time,
+        the two will be identical. However, the block_group_name must be unique. This means that as long as the block_group_name
+        stays the same, then another group will not be created as long as the conditions match.
+        endcomment
+
+        assign allow_block_group = true
+
+        if block.type == 'price' and block.settings.show_taxes_notice == false and next_block.type == 'rating'
+          assign block_group_class = 'text-with-rating'
+          assign block_group_name = 'text-with-rating'
+        elsif block.type == 'rating' and next_block.type == 'price' and next_block.settings.show_taxes_notice == false
+          assign block_group_class = 'text-with-rating'
+          assign block_group_name = 'text-with-rating'
+        elsif block.type == 'sku' and next_block.type == 'rating'
+          assign block_group_class = 'text-with-rating'
+          assign block_group_name = 'text-with-rating'
+        elsif block.type == 'rating' and next_block.type == 'sku'
+          assign block_group_class = 'text-with-rating'
+          assign block_group_name = 'text-with-rating'
+        elsif block.type == 'accordion' and next_block.type == 'accordion' and next_block.settings.show_below_gallery != true
+          assign block_group_class = 'accordion-group'
+          assign block_group_name = 'accordion-group'
+        elsif block.type == 'accordion' and next_block.type == 'description' and product.description != blank and next_block.settings.collapse_content and next_block.settings.show_below_gallery != true
+          assign block_group_class = 'accordion-group'
+          assign block_group_name = 'accordion-group'
+        elsif block.type == 'description' and product.description != blank and block.settings.collapse_content and next_block.type == 'accordion' and next_block.settings.show_below_gallery != true
+          assign block_group_class = 'accordion-group'
+          assign block_group_name = 'accordion-group'
+        elsif block.type == 'feature_with_icon' and next_block.type == 'feature_with_icon'
+          assign block_group_class = 'feature-badge-list'
+          assign block_group_name = 'feature-badge-list'
+        else
+          assign allow_block_group = false
+          assign block_group_class = ''
+          assign current_block_group_name = ''
+        endif
+
+        if allow_block_group
+          assign new_block_group_name = block_group_name
+
+          if inside_block_group_context == true and new_block_group_name != current_block_group_name
+            assign allow_block_group = false
+          else
+            assign current_block_group_name = new_block_group_name
+          endif
+        endif
+      -%}
+
+      {%- capture block_content -%}
+        {%- case block.type -%}
+
+
+       
+    
+
+
+
+          {%- when 'product-popups' -%}
+
+            <div class="flex-custom-data">
+                {% if product.description != blank %}
+                  <a href="#" id="custom-description-popup">Description</a>
+                {% endif %}
+            
+             
+                  <a href="#" id="custom-impact-popup">Impact</a>
+                
+            
+                {% if block.settings.cstm-delivery != blank %}
+                  <a href="#" id="custom-delivery-popup">Delivery</a>
+                {% endif %}
+            
+                {% if block.settings.cstm-email != blank or block.settings.cstm-phone != blank or block.settings.cstm-hours != blank %}
+                  <a href="#" id="custom-concierge-popup">Concierge</a>
+                {% endif %}
+              </div>
+
+          
+            <div class="mobile-desc-prod">
+              <div class="heads-desc">
+                <label for="mobile-desc-label" class="active">Descriptions</label>
+                <label for="mobile-impact-label">Impact</label>
+                <label for="mobile-delivery-label">Delivery</label>
+                <label for="mobile-concierge-label">Concierge</label>
+              </div>
+
+          
+              <div class="mobile-desc-content">
+
+
+          
+                      <div class="mobile-description-wrps mobile-text-wrapper-custom" name="mobile-desc-label">
+                          <h2 class="h2">{{ product.title }}</h2>
+                          <p class="h5">{{ product.metafields.custom.sub_title }}</p>
+                          
+                          <div class="prose">
+                            {{ product.description }}
+                            <h5><b>Barcode:</b>{{ product.first_available_variant.barcode }}</h5>
+                          </div>
+                          <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                          {% if product.metafields.custom.reviews != blank %}
+                            <div class="testimonial-slider">
+                              {% for review in product.metafields.custom.reviews.value  %}
+                                <div><div class="prose"><p>{{ review }}</p></div></div>
+                              {% endfor %}
+                            </div>
+                          {% else %}
+                            {% if product.type == "Rings" %}  
+                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                              <div class="testimonial-slider">
+                                  <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>—  Viola | Australia</span></p></div></div>
+                                  <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
+                                  <div><div class="prose"><p>Thank you for all your help! I would like to wait the 60 days for my dream ring to be handmade. It holds a special meaning to me and is definitely worth the wait. <span>—  Linda | Sweden</span></p></div></div>
+                                  <div><div class="prose"><p>Hey beautiful, thank you for making this gorgeous ring, I'm getting so many compliments on it. I'm a psychic, and my Gold Rutile ring is absolutely perfect for the energy I need at work. <span>—  Cura | UK</span></p></div></div>
+                                  <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
+                              </div>
+                            {% else %}
+                              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                              <div class="testimonial-slider">
+                                  <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be. <span>—  Linda | Sweden</span></p></div></div>
+                                  <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>
+                                  <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you. <span>—  Viola | Australia</span></p></div></div>
+                                  <div><div class="prose"><p>Sally I have to say I have never, in all my years of jewelry, metalsmithing & commerce, have i ever met such a wonderful person and artist as you!! Thank you so much. You're so kind and thoughtful. <span>—  Elaine McLain | USA</span></p></div></div>
+                              </div>
+                            {% endif %}
+                          {% endif %}
+                      </div>
+
+                      <div class="mobile-impact-wrps mobile-text-wrapper-custom" name="mobile-impact-label">
+                        <h2 class="h2">Impact</h2>
+                        <p class="h5">{{block.settings.cstm-impact-subhead}}</p>
+                        <div class="prose">
+                          {% if product.metafields.custom.impact == "Black Diamond" %}
+                            <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+                            <div class="prose">
+                              <p>Sally plays with ideas of light and dark, and the balance between the two. Black Diamonds, rather than flawless diamonds, are a signature stone in her pieces. Paying homage to luxury while rebelling against its conventions. She believes that women can draw strength from the difference their purchase power makes to the environment. </p>
+                              <p>“I work to illuminate the natural beauty of precious and semi-precious stones, but also that of man-made materials,” she says. “It is an invitation for women to explore their own sense of self through the expression of their style choices. Any decision that they make has impact, so let it be a positive one.”</p>
+                              <p>With her Signature embedded single Black Diamond as a provocative symbol of change, her choices have been intentional, paying homage to luxury whilst breaking ground in the industry in order to create lasting impact for communities and the environment. Her work provides an invitation to be drawn into greater meaning that sits behind the beauty and mystique of its materiality.</p>
+                              <p>100% of the proceeds from the SALLY SKOUFIS(™) signature Black Diamond, elegantly featured in this cherished piece, is donated to cause.</p>
+                            </div>
+                          {% elsif product.metafields.custom.impact == "Queen Bee" %}
+                            <p class="h5">Consciously hand crafted jewelry inspired by environmental evolution and sustainable materiality.</p>
+                            <div class="prose">
+                              <p>Honouring the immeasurable importance of bees and the role they possess in the preservation or destruction of life; Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - a combination of fine, semi-precious, and man-made materials. Her work provides an invitation to be drawn into the greater meaning that lies behind the beauty and mystique of its materiality.</p>
+                              <p>Proceeds from the SALLY SKOUFIS™ Queen Bee range are donated to preserve our bee species.</p>
+                            </div>
+                          
+                          {% elsif product.metafields.custom.impact == "Recycled Aluminium" %}
+                            <p class="h5">Nine months in the making, ANAX {Dragonfly} is the fulfilment of a pioneering collaboration of elite international craftsmen creating a new form of metal constituent in fine jewelry making – Recycled Aluminium.</p>
+                            <div class="prose">
+                              <p>A revolutionary collection developed from refined soda cans to mark Sally’s quest for conscious innovation to industry practices.</p>
+                              <p>The result is a wholly conscious collection of mini sculptural pieces with fine detailing in vivid hues not otherwise available. The Dragonfly has been a symbol of hope, new beginnings and change for many centuries. </p>
+                              <p>ANAX is an ancient Greek word for leader. In a world desperate for sustainable evolution, Sally is incredibly grateful to share this pioneering endeavour with you. As one of the first sustainable alternatives in traditional fine jewelry making, SALLY SKOUFIS™ is honored to release ANAX: a breakthrough in conscious jewelry innovation and design edge.  </p>
+                            </div>
+                          {% elsif product.metafields.custom.impact == "Pearl" %}
+                            <p class="h5">ECLIPSE is a limited edition and Pre-Order collection to conserve our only 'living gemstones'.</p>
+                            <div class="prose">
+                              <p>Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - pearls are the only gemstone born from living creatures, as such are eco-friendly.  </p>
+                              <p>SALLY SKOUFIS partners with sustainable freshwater pearl farmers, who deeply consider the habitat for the mussels and diligently meet the ideal conditions for pearl production and water quality. A process that adds value to the ecosystem. These creatures filter water naturally, by removing heavy metals and nitrogen from the waters surrounding them. Research indicates that pearl farming can improve water quality and the local ecosystem, with positive impacts on coral reef conservation. </p>
+                              <p>A single pearl can take several years to grow. Nurture this phenomenon in mind as you wait patiently for us to lovingly hand make your unique piece. </p>
+                            </div>
+                          {% elsif product.metafields.custom.impact == "Exotic Galuchat Leather" %}
+                              <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+                            <div class="prose">
+                              <p>Exotic Galuchat leather elegantly featured in this cherished piece is sourced from cooperatives of independent fishermen from the Andaman & South China seas who apply traditional and sustainable processes to capture food - we minimise wastage by using the stunning by-product. To further conserve, SALLY SKOUFIS artisans hand craft each piece adhering to policies established by the Washington Convention on Endangered Species (CITES).</p>
+                              <p>Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - a combination of fine, semi-precious and man-made. Her work provides an invitation to be drawn into greater meaning that sits behind the beauty and mystique of its materiality.</p>
+                            </div>
+                          {% else %}
+                            <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+                            <div class="prose">
+                              <p>Sally's designs are inspired by environmental evolution, not led by trend; purpose driven to be worn to occasion, sentiment or self-expression. Her pieces are expressed emotively – working outside the boundaries of a particular genre yet maintaining a signature aesthetic that provokes expectation and boldly captivates.</p>
+                              <p>Creating pieces that are treasured forever, 'of the earth' as well as 'from the hands of a human', Sally uses ethically sourced precious and semi-precious stones, as well as man-made gemstones. Her selection of materials reflects her persistence to pioneer, honouring with stones that empower. They incite soul connection and provide strength to their wearer with inimitable magnetism.</p>
+                            </div>
+                          {% endif %}
+                        </div>
+                        <a href="#" class="button w-full hidden">LEARN MORE</a>
+                      </div>
+                    
+                      <div class="mobile-delivery-wrps mobile-text-wrapper-custom" name="mobile-delivery-label">
+                        <h2 class="h2">Delivery</h2>
+                        <div class="prose">
+                          {%- for block in filtered_blocks -%}
+                            {%- capture block_content_delivery -%}
+                              {%- case block.type -%}
+                                {%- when 'product-popups' -%}
+                                    {% if block.settings.cstm-delivery != blank %}
+                                      {{ block.settings.cstm-delivery }}
+                                    {% endif %}
+                              {%- endcase -%}
+                           {%- endcapture -%}
+                           {{- block_content_delivery -}}
+                        {% endfor %}
+                        </div>
+                      </div>
+                    
+                    
+                    
+                      <div class="mobile-concierge-wrps mobile-text-wrapper-custom" name="mobile-concierge-label">
+                        <h2 class="h2">At your service</h2>
+                        <div class="prose">
+                          {%- for block in filtered_blocks -%}
+                            {%- capture block_content_concierge -%}
+                              {%- case block.type -%}
+                                {%- when 'product-popups' -%}
+                                    {% if block.settings.cstm-email != blank or block.settings.cstm-phone != blank or block.settings.cstm-hours != blank %}
+                                      <p class="with-svg">{%- render 'icon' with 'email' -%}{{ block.settings.cstm-email }}</p>
+                                      <p class="with-svg">{%- render 'icon' with 'picto-phone' -%}{{ block.settings.cstm-phone }}</p>
+                                      <p class="with-svg">{%- render 'icon' with 'picto-info' -%}{{ block.settings.cstm-hours }}</p>
+                                    {% endif %}
+                              {%- endcase -%}
+                           {%- endcapture -%}
+                           {{- block_content_concierge -}}
+                        {% endfor %}
+                        </div>
+                      </div>
+
+
+
+          
+
+
+          
+                </div>
+          
+  
+            </div>
+
+
+          
+
+          {%- when 'bespoke' -%}
+            <div class="bespoke-wrapper-outer" id="bespoke-wrapper-outer">
+
+                <div class="bespoke-wrapper-inner" id="bespoke-wrapper-inner">
+                <span class="close-button" id="close-button">X</span>
+
+                <h2 class="h2">CUSTOM</h2>
+                <p class="h5">PERSONALISE YOUR DESIGN</p>
+                <div id="bespoke-sub-text"></div>
+                  
+                  {% if product.metafields.custom.bespoke_lead_time != blank %}
+                    {% capture lead_time_metafield %}
+                      {{ product.metafields.custom.bespoke_lead_time }}
+                    {% endcapture %}
+                  {% endif %}
+                  
+                {%- render 'accordion', title: lead_time_metafield, content: "
+                  <p>Investing in a SALLY SKOUFIS piece is an investment in a collective soul experience. Worn to awaken the spirit of our conscious clientele the world over.</p>
+                  
+                  <p>Thank you for selecting a custom size; limited hand made production is deeply rooted in our sustainable ethos.</p>
+                 
+                  <p>Our fine jewelry artisans will lovingly craft this piece for you in approximately 4 weeks and we'll keep you informed as it progresses through production to delivery.</p>
+                 
+                  <p>Please note custom sizes may not be returned or exchanged.</p>
+               
+                  <p>Need further assistance? Kindly call concierge at +61 485 866 886 or email <a href='mailto:concierge@sallyskoufis.com'>concierge@sallyskoufis.com</a></p>
+                  ", prose_content: true, size: 'lg', block: block, show_arrow: true -%}
+                <a href="#" class="button w-full" id="bespoke-submit">ADD TO BAG</a>
+                </div>
+
+            </div>         
+          {%- when '@app' -%}
+            {%- render block -%}
+
+          {%- when 'vendor' -%}
+            {%- if product != blank -%}
+              {%- render 'vendor' with product.vendor, class: 'h6 link-faded' -%}
+            {%- else -%}
+              {%- assign placeholder_vendor = 'general.on_boarding.product_vendor' | t -%}
+              {%- render 'vendor' with placeholder_vendor, class: 'h6 link-faded' -%}
+            {%- endif -%}
+
+          {%- when 'title' -%}
+            {%- if product != blank -%}
+              {%- assign product_title = product.title -%}
+            {%- else -%}
+              {%- assign product_title = 'general.on_boarding.product_title' | t -%}
+            {%- endif -%}
+
+            {%- if request.page_type == 'product' and update_url -%}
+              <h1 class="product-title {{ block.settings.heading_tag }}">
+                {{- product_title -}}
+              </h1>
+            {%- else -%}
+              <h2 class="product-title {{ block.settings.heading_tag }}">
+                <a href="{{ product.url }}">{{ product_title }}</a>
+              </h2>
+            {%- endif -%}
+
+            <style>
+            .product-info__block-item[data-block-type=title]{
+              position:relative !important;
+            }
+            #custom-wishlist-button {
+              position:absolute;
+              top:0;
+              right:0;
+            }
+            #custom-wishlist-button.swym-added .wishlist-icon {
+                fill: black !important; 
+            }
+            #custom-wishlist-button.swym-added .wishlist-icon path {
+                stroke:black !important;
+            }
+            #custom-wishlist-button.swym-loaded .wishlist-icon {
+                fill: white; 
+            }
+            #custom-wishlist-button.swym-loaded .wishlist-icon path {
+                stroke:black;
+            }
+            #custom-wishlist-button {
+                background: unset !important;
+                float:right;
+            }
+            button.swym-button.disabled, button.swym-button:disabled {
+                opacity: 1 !important;
+            }
+            </style>
+            <button id="custom-wishlist-button" class="swym-button swym-add-to-wishlist"
+                data-with-epi="true" 
+                data-swaction="addToWishlist" 
+                data-product-id="{{ product.id }}" 
+                data-variant-id="{{ product.variants[0].id }}" 
+                data-product-url="{{ shop.url }}{{ product.url }}" 
+            >
+                <svg 
+                    class="wishlist-icon" 
+                    aria-hidden="true"
+                    focusable="false" 
+                    role="presentation" 
+                    viewBox="0 0 24 24"
+                    width="24px"
+                >
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </button>
+
+          {%- when 'sku' -%}
+            <variant-sku class="variant-sku text-sm text-subdued" form="{{ product_form_id }}" {% if product != blank and product.selected_or_first_available_variant.sku == blank %}hidden{% endif %}>
+              {{- 'product.general.sku' | t }} {% if product != blank -%}{{ product.selected_or_first_available_variant.sku -}}{%- else -%}SK-123AB{%- endif -%}
+            </variant-sku>
+
+          {%- when 'badges' -%}
+            {%- if product != blank -%}
+              {%- render 'product-badges', product: product, variant: product.selected_or_first_available_variant, types: 'custom,discount', form_id: product_form_id -%}
+            {%- endif -%}
+
+          {%- when 'price' -%}
+            <div class="v-stack">
+              {%- render 'price-list', product: product, variant: product.selected_or_first_available_variant, context: 'product', form_id: product_form_id -%}
+
+              {%- if block.settings.show_taxes_notice -%}
+                <p class="text-sm text-subdued">
+                  {%- if cart.taxes_included -%}
+                    {{ 'product.general.taxes_included' | t }}
+                  {%- else -%}
+                    {{ 'product.general.taxes_excluded' | t }}
+                  {%- endif -%}
+
+                  {%- if shop.shipping_policy.body != blank -%}
+                    {{ 'product.general.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+            </div>
+
+          {%- when 'payment_terms' -%}
+            {%- if product != blank -%}
+              <payment-terms class="payment-terms" form="{{ product_form_id }}">
+                {%- capture product_installment_form_id -%}product-installment-form-{{ section.id }}-{{ product.id }}{%- endcapture -%}
+
+                {%- form 'product', product, id: product_installment_form_id -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  {{- form | payment_terms -}}
+                {%- endform -%}
+              </payment-terms>
+            {%- endif -%}
+
+          {%- when 'rating' -%}
+            {%- if product != blank -%}
+              {%- render 'product-rating', product: product, show_empty: block.settings.show_empty, display_mode: block.settings.rating_mode, show_placeholder: false -%}
+            {%- else -%}
+              {%- render 'product-rating', show_placeholder: true -%}
+            {%- endif -%}
+
+          {%- when 'separator' -%}
+            <hr>
+
+          {%- when 'description' -%}
+            {%- if product == blank -%}
+              {%- assign product_description = 'general.on_boarding.product_description' | t -%}
+            {%- else -%}
+              {%- assign product_description = product.description -%}
+            {%- endif -%}
+
+            {%- if product_description != blank -%}
+              {%- if block.settings.collapse_content -%}
+                {%- assign accordion_title = 'product.general.description' | t -%}
+                {%- render 'accordion', title: accordion_title, content: product_description, prose_content: true, block: block -%}
+              {%- else -%}
+                <div class="prose">
+                  {{- product_description -}}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'variant_picker' -%}
+            {%- if product != blank -%}
+              {%- render 'variant-picker',
+                  product: product,
+                  form_id: product_form_id,
+                  update_url: update_url,
+                  hide_sold_out_variants: block.settings.hide_sold_out_variants,
+                  selector_type: block.settings.selector_type,
+                  color_selector_type: block.settings.color_selector_type,
+                  size_chart_page: block.settings.size_chart_page -%}
+            {%- endif -%}
+
+          {%- when 'product_variations' -%}
+            {%- liquid
+              assign contains_product = false
+
+              for product_variation in block.settings.products
+                if product_variation == product
+                  assign contains_product = true
+                endif
+              endfor
+            -%}
+
+            {%- if contains_product -%}
+              {%- comment -%}
+                IMPLEMENTATION NOTE: this feature allows to connect different products on the same page. It is therefore
+                visually similar to a variant picker, although it does not share the functionality
+              {%- endcomment -%}
+
+              <div class="variant-picker v-stack gap-4">
+                <div class="variant-picker__option v-stack gap-2">
+                  {%- assign metafield_parts = block.settings.option_value_metafield | split: '.' -%}
+                  {%- assign metafield_namespace = metafield_parts | first -%}
+                  {%- assign metafield_key = metafield_parts | last -%}
+
+                  {%- if block.settings.option_name != blank -%}
+                    <div class="h-stack gap-1">
+                      <p class="text-subdued">{{ block.settings.option_name | escape }}:</p>
+                      <span>{{ product.metafields[metafield_namespace][metafield_key].value | escape }}</span>
+                    </div>
+                  {%- endif -%}
+
+                  <div class="variant-picker__option-values h-stack gap-2.5 wrap">
+                    {%- liquid
+                      for product_variation in block.settings.products
+                        assign value = product_variation.metafields[metafield_namespace][metafield_key].value
+
+                        if product_variation == product
+                          assign selected = true
+                        else
+                          assign selected = false
+                        endif
+
+                        case block.settings.color_selector_type
+                          when 'color'
+                            render 'swatch' with 'color', href: product_variation.url, value: value, selected: selected
+
+                          when 'variant'
+                            render 'swatch' with 'media', href: product_variation.url, value: value, media: product_variation.featured_media, selected: selected
+
+                          when 'block'
+                            render 'swatch' with 'block', href: product_variation.url, value: value, selected: selected
+
+                          when 'block_swatch'
+                            render 'swatch' with 'block', href: product_variation.url, value: value, selected: selected, show_color: true
+                        endcase
+                      endfor
+                    -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+          {%- when 'line_item_property' -%}
+            {%- if block.settings.label != blank -%}
+              {%- capture name -%}properties[{{ block.settings.label | escape }}]{%- endcapture -%}
+
+              <div class="line-item-property">
+                {%- liquid
+                  if block.settings.type == 'text'
+                    if block.settings.allow_long_text
+                      render 'input', label: block.settings.label, name: name, form: product_form_id, multiline: 4, required: block.settings.required, maxlength: block.settings.max_length
+                    else
+                      render 'input', type: 'text', label: block.settings.label, name: name, form: product_form_id, required: block.settings.required, maxlength: block.settings.max_length
+                    endif
+                  elsif block.settings.type == 'checkbox'
+                    render 'checkbox', label: block.settings.label, name: name, form: product_form_id, value: block.settings.checkbox_value, required: block.settings.required
+                  elsif block.settings.type == 'dropdown' and block.settings.select_values != blank
+                    assign option_values = block.settings.select_values | split: ','
+                    render 'select', label: block.settings.label, option_values: option_values, show_empty_value: true, name: name, form: product_form_id, required: block.settings.required
+                  endif
+                -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'quantity_selector' -%}
+            {%- if product.available -%}
+              {% render 'quantity-selector', variant: product.selected_or_first_available_variant, form: product_form_id %}
+            {%- endif -%}
+
+          {%- when 'inventory' -%}
+            {%- render 'inventory',
+                product: product,
+                show_in_stock_quantity: block.settings.show_in_stock_quantity,
+                show_progress_bar: block.settings.show_progress_bar,
+                progress_bar_max_value: block.settings.progress_bar_max_value,
+                low_threshold: block.settings.low_inventory_threshold,
+                form_id: product_form_id
+            -%}
+
+          {%- when 'buy_buttons' -%}
+
+    
+
+     
+        
+
+            
+            {%- render 'buy-buttons',
+                product: product,
+                form_id: product_form_id,
+                show_payment_button: block.settings.show_payment_button,
+                show_gift_card_recipient: block.settings.show_gift_card_recipient,
+                atc_button_background: block.settings.atc_button_background,
+                atc_button_text_color: block.settings.atc_button_text_color,
+                payment_button_background: block.settings.payment_button_background,
+                payment_button_text_color: block.settings.payment_button_text_color
+            -%}
+
+          {% comment %}
+
+            <div class="payment-methods-add-to-cart">
+              {% assign enabled_payment_types = 'visa,master,paymaya,afterpay,american_express,apple_pay,klarna-pay-later,google_pay' | remove: ' ' | split: ',' %}
+              {%- for type in enabled_payment_types -%}
+                {{- type | payment_type_svg_tag -}}
+              {%- endfor -%}
+            </div>
+
+          {% endcomment %}
+
+          {%- when 'pickup_availability' -%}
+            {%- if product != blank -%}
+              {%- render 'pickup-availability', product_variant: product.selected_or_first_available_variant, form_id: product_form_id -%}
+            {%- endif -%}
+
+          {%- when 'offers' -%}
+            {%- assign offers_count = 0 -%}
+
+            {%- capture offers_content -%}
+              {%- for i in (1..3) -%}
+                {%- assign title_setting = 'offer_' | append: i | append: '_title' -%}
+                {%- assign content_setting = 'offer_' | append: i | append: '_content' -%}
+
+                {%- if block.settings[title_setting] != blank or block.settings[content_setting] != blank -%}
+                  <div class="product-offers__item {% unless block.settings.stack_offers %}text-center{% endunless %} snap-center">
+                    <div class="v-stack gap-2.5">
+                      {%- if block.settings[title_setting] != blank -%}
+                        <p class="h6">{{ block.settings[title_setting] }}</p>
+                      {%- endif -%}
+
+                      {%- if block.settings[content_setting] != blank -%}
+                        <div class="prose">
+                          {{- block.settings[content_setting] -}}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+
+                  {%- assign offers_count = offers_count | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+
+            {%- if offers_content != blank -%}
+              {%- assign carousel_id = 'product-offers-' | append: block.id -%}
+
+              <div class="product-offers border" style="{% render 'surface', background: block.settings.background, text_color: block.settings.text_color, border_color: block.settings.border_color %}">
+                <scroll-carousel id="{{ carousel_id }}" class="product-offers__list {% if block.settings.stack_offers or offers_count == 1 %}product-offers__list--stack divide-y{% else %}product-offers__list--carousel scroll-area snap-x{% endif %}">
+                  {{ offers_content }}
+                </scroll-carousel>
+
+                {%- if block.settings.stack_offers == false and offers_count > 1 -%}
+                  <carousel-navigation aria-controls="{{ carousel_id }}" class="page-dots">
+                    {%- for i in (1..offers_count) -%}
+                      <button class="tap-area" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+                        <span class="sr-only">{{ 'general.accessibility.go_to_item' | t: index: forloop.index }}</span>
+                      </button>
+                    {%- endfor -%}
+                  </carousel-navigation>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'complementary_products' -%}
+            {%- unless block.settings.show_below_gallery -%}
+              {%- render 'complementary-products', product: product, block: block -%}
+            {%- endunless -%}
+
+          {%- when 'text' -%}
+            {%- if block.settings.text != blank -%}
+              <div class="prose">
+                {{- block.settings.text -}}
+              </div>
+            {%- endif -%}
+
+          {%- when 'accordion' -%}
+            {%- liquid
+              assign accordion_title = block.settings.title | default: block.settings.page.title
+              assign accordion_content = block.settings.page.content | default: block.settings.content
+
+              if accordion_title != blank and accordion_content != blank
+                render 'accordion', title: accordion_title, content: accordion_content, prose_content: true, icon: block.settings.icon, custom_icon: block.settings.custom_icon, block: block, show_arrow: true
+              endif
+            -%}
+
+          {%- when 'feature_with_icon' -%}
+            {%- if block.settings.text != blank or block.settings.icon != 'none' or block.settings.custom_icon != blank -%}
+              {%- capture feature_content -%}
+                {%- if block.settings.custom_icon != blank -%}
+                  {%- capture sizes -%}{{ block.settings.icon_width }}px{%- endcapture -%}
+                  {%- capture widths -%}{{ block.settings.icon_width }}, {{ block.settings.icon_width | times: 2 | at_most: block.settings.custom_icon.width }}{%- endcapture -%}
+                  {%- capture style -%}--image-max-width: {{ block.settings.icon_width }}px{%- endcapture -%}
+                  {{- block.settings.custom_icon | image_url: width: block.settings.custom_icon.width | image_tag: loading: 'lazy', sizes: sizes, widths: widths, class: 'constrained-image', style: style -}}
+                {%- else -%}
+                  {%- render 'icon' with block.settings.icon, width: block.settings.icon_width -%}
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <p>{{ block.settings.text }}</p>
+                {%- endif -%}
+              {%- endcapture -%}
+
+              {%- assign has_border = false -%}
+
+              {%- if block.settings.border_color != blank and block.settings.border_color != 'rgba(0,0,0,0)' -%}
+                {%- assign has_border = true -%}
+              {%- endif -%}
+
+              {%- if block.settings.link -%}
+                <a href="{{ block.settings.link }}" class="feature-badge {% if has_border %}border{% endif %}" style="{% render 'surface', background: block.settings.background, text_color: block.settings.text_color, border_color: block.settings.border_color %}">
+                  {{- feature_content -}}
+                </a>
+              {%- else -%}
+                <div class="feature-badge {% if has_border %}border{% endif %}" style="{% render 'surface', background: block.settings.background, text_color: block.settings.text_color, border_color: block.settings.border_color %}">
+                  {{- feature_content -}}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'liquid' -%}
+            {%- if block.settings.liquid != blank -%}
+              <div class="liquid">
+                {{- block.settings.liquid -}}
+              </div>
+            {%- endif -%}
+
+          {%- when 'modal' -%}
+           
+            {%- if block.settings.button_title != blank and block.settings.modal_content != blank -%}
+              {%- assign modal_id = 'modal-' | append: block.id -%}
+
+              {%- render 'button', content: block.settings.button_title, aria_controls: modal_id, style: block.settings.button_style, stretch: block.settings.stretch_button, background: block.settings.button_background, text_color: block.settings.button_text_color -%}
+
+              <x-modal id="{{ modal_id | escape }}" class="modal modal--lg">
+                <span class="h5" slot="header">{{ block.settings.modal_title }}</span>
+
+                <div class="prose">
+                  {{- block.settings.modal_content -}}
+
+                  {% if block.settings.image_picker_modal != blank %}
+                    <img width="100%" height="100%" src="{{ block.settings.image_picker_modal | img_url: "master" }}">
+                  {% endif %}
+
+                </div>
+              </x-modal>
+            {%- endif -%}
+           
+            
+
+
+
+          {%- when 'image' -%}
+            {%- if block.settings.image != blank -%}
+              {%- capture image_style_attribute -%}{% if block.settings.alignment == 'center' %}margin-inline: auto;{% elsif block.settings.alignment == 'end' %}margin-inline-start: auto;{% endif %}{%- endcapture -%}
+
+              {%- if block.settings.width_mode == 'custom' -%}
+                {%- capture image_style_attribute -%}{{ image_style_attribute }} --image-max-width: {{ block.settings.max_width }}px; --image-mobile-max-width: {{ block.settings.mobile_max_width }}px{%- endcapture -%}
+                {%- capture image_sizes_attribute -%}(max-width: 699px) min({{ block.settings.mobile_max_width }}px, 100vw), min({{ block.settings.max_width }}px, 100vw){%- endcapture -%}
+              {%- else -%}
+                {%- capture image_sizes_attribute -%}min(600px, 100vw){%- endcapture -%}
+                {%- capture image_style_attribute -%}width: 100%;{%- endcapture -%}
+              {%- endif -%}
+
+              {{- block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: 'lazy', sizes: image_sizes_attribute, widths: '200,300,400,500,600,800,1000,1200,1400', class: 'constrained-image', style: image_style_attribute -}}
+            {%- endif -%}
+
+          {%- when 'button' -%}
+            {%- if block.settings.text != blank -%}
+              {%- render 'button', href: block.settings.link, content: block.settings.text, stretch: block.settings.stretch, background: block.settings.background, text_color: block.settings.text_color -%}
+            {%- endif -%}
+
+          {%- when 'share_buttons' -%}
+            <button class="share-buttons share-buttons--native link-faded" is="share-button" hidden>
+              <span class="smallcaps text-xxs">{{- 'general.social.share' | t -}}</span>
+              {%- render 'icon' with 'share' -%}
+            </button>
+
+            <div class="share-buttons">
+              <span class="smallcaps text-xxs text-subdued">{{- 'general.social.share' | t -}}</span>
+              {%- render 'share-buttons', url: product.url, title: product.title, description: product.description, layout: 'list' -%}
+            </div>
+
+          {%- when 'more_information' -%}
+            {%- comment -%}We need at least one block compatible with below gallery information{%- endcomment -%}
+            {%- if block.settings.text != blank and has_content_below_gallery -%}
+              <a href="#product-extra-information" class="product-info__more-info md-max:hidden">
+                <span class="smallcaps text-xxs">{{- block.settings.text -}}</span>
+                {%- render 'icon' with 'chevron-right' -%}
+              </a>
+            {%- endif -%}
+
+          {%- when 'reviews_slider' -%}
+          <div class="prod_page_review_slider">
+            {% if product.metafields.custom.reviews != blank %}
+                  <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                  <div class="testimonial-slider">
+                    {% for review in product.metafields.custom.reviews.value  %}
+                      <div><div class="prose"><p>{{ review }}</p></div></div>
+                    {% endfor %}
+                  </div>
+              {% else %}
+                  {% if product.type == "Rings" %}  
+                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                    <div class="testimonial-slider">
+                        <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>— Viola | Australia</span></p></div></div>
+                        <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
+                        <div><div class="prose"><p>Thank you for all your help! I would like to wait the 60 days for my dream ring to be handmade. It holds a special meaning to me and is definitely worth the wait. <span>—  Linda | Sweden</span></p></div></div>
+                        <div><div class="prose"><p>Hey beautiful, thank you for making this gorgeous ring, I'm getting so many compliments on it. I'm a psychic, and my Gold Rutile ring is absolutely perfect for the energy I need at work. <span>— Cura | UK</span></p></div></div>
+                        <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
+                    </div>
+                  {% else %}
+                    <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+                    <div class="testimonial-slider">
+                        <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be. <span>—  Linda | Sweden</span></p></div></div>
+                        <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>
+                        <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you. <span>—  Viola | Australia</span></p></div></div>
+                        <div><div class="prose"><p>Sally I have to say I have never, in all my years of jewelry, metalsmithing & commerce, have i ever met such a wonderful person and artist as you!! Thank you so much. You're so kind and thoughtful. <span>—  Elaine McLain | USA</span></p></div></div>
+                    </div>
+                  {% endif %}
+              {% endif %}
+            </div>
+
+          
+        {%- endcase -%}
+      {%- endcapture -%}
+
+      {%- if block_content != blank -%}
+        {%- if allow_block_group and inside_block_group_context == false -%}
+          {%- assign inside_block_group_context = true -%}
+          <div class="product-info__block-group {{ block_group_class }}" data-group-type="{{ block_group_name }}">
+        {%- endif -%}
+
+        <div class="product-info__block-item" data-block-type="{{ block.type | replace: '_', '-' }}" {% unless block.type == '@app' or block.type == 'accordion' %}{{ block.shopify_attributes }}{% endunless %}>
+          {{- block_content -}}
+        </div>
+      {%- endif -%}
+
+      {%- if inside_block_group_context and allow_block_group == false -%}
+        {%- assign inside_block_group_context = false -%}
+         </div>
+      {%- endif -%}
+    {%- endfor -%}
+    
+  </div>
+
+  {%- comment -%}
+    IMPLEMENTATION NOTE: under rare circumstances, merchant may want to show selectors to allow variant selection, but hide
+    the add to cart button. This is however problematic as product info is changed based on the form, so we create a default
+    one if no buy buttons exists
+  {%- endcomment -%}
+
+  {%- assign buy_buttons_block = section.blocks | where: 'type', 'buy_buttons' | first -%}
+
+  {%- unless buy_buttons_block != blank or product == blank -%}
+    {%- form 'product', product, id: product_form_id, hidden: true -%}
+      <input type="hidden" disabled name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    {%- endform -%}
+  {%- endunless -%}
+
+
+  
+<div class="popups-customs">
+
+  <div id="custom-description-wrapper" class="custom-popups-wrapper">
+      <span class="close-button" id="close-button-desc">X</span>
+      <div class="inner-popup-wrapper-custom">
+
+        <h2 class="h2">{{ product.title }}</h2>
+        <p class="h5">{{ product.metafields.custom.sub_title }}</p>
+  
+        <div class="prose">
+        {{ product.description }}
+        {% if product.first_available_variant.barcode != blank %}
+        <h5><b>Barcode:</b>{{ product.first_available_variant.barcode }}</h5>
+        {% endif %}
+        </div>
+        
+        {% if product.metafields.custom.reviews != blank %}
+            <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+            <div class="testimonial-slider">
+              {% for review in product.metafields.custom.reviews.value  %}
+                <div><div class="prose"><p>{{ review }}</p></div></div>
+              {% endfor %}
+            </div>
+        {% else %}
+            {% if product.type == "Rings" %}  
+              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+              <div class="testimonial-slider">
+                  <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you again. <span>— Viola | Australia</span></p></div></div>
+                  <div><div class="prose"><p>I'm thrilled about having a Bespoke ring made for me by you. Being part of my love ring journey, it's quite exciting. Quite serendipitous as I love supporting creative artists too. <span>—  Monika | USA</span></p></div></div>
+                  <div><div class="prose"><p>Thank you for all your help! I would like to wait the 60 days for my dream ring to be handmade. It holds a special meaning to me and is definitely worth the wait. <span>—  Linda | Sweden</span></p></div></div>
+                  <div><div class="prose"><p>Hey beautiful, thank you for making this gorgeous ring, I'm getting so many compliments on it. I'm a psychic, and my Gold Rutile ring is absolutely perfect for the energy I need at work. <span>—  Cura | UK</span></p></div></div>
+                  <div><div class="prose"><p>I just wanted to say the ring is beautiful and my partner loves it! <span>— Sophia | Australia</span></p></div></div>
+              </div>
+            {% else %}
+              <img src="{{ 'quote1.png' | asset_url }}" class="quote-testi-desc">
+              <div class="testimonial-slider">
+                  <div><div class="prose"><p>I just discovered your jewelry and have to say that I'm absolutely in love with everything! They are so powerful yet feminine and are exactly what jewelry should be.<span> —  Linda | Sweden</span></p></div></div>
+                  <div><div class="prose"><p>Super impressed by your jewelry. I'm captured by the electric feminine & deep unique expression it resembles. It's something I love - unique and empowered female brands. <span>—  Heidy | USA</span></p></div></div>
+                  <div><div class="prose"><p>Hi Sally, Thank you from the bottom of my heart, my Bespoke ring arrived safely this morning, beautifully packed and is now lovingly placed on my finger. It's pure perfection! Thank you. <span>—  Viola | Australia</span></p></div></div>
+                  <div><div class="prose"><p>Sally I have to say I have never, in all my years of jewelry, metalsmithing & commerce, have i ever met such a wonderful person and artist as you!! Thank you so much. You're so kind and thoughtful. <span>—  Elaine McLain | USA</span></p></div></div>
+              </div>
+            {% endif %}
+        {% endif %}
+        
+      </div>
+
+    
+  </div>
+
+
+  <div id="custom-impact-wrapper" class="custom-popups-wrapper">
+    <span class="close-button" id="close-button-impact">X</span>
+    <h2 class="h2">Impact</h2>
+
+    {% if product.metafields.custom.impact == "Black Diamond" %}
+      <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+      <div class="prose">
+        <p>Sally plays with ideas of light and dark, and the balance between the two. Black Diamonds, rather than flawless diamonds, are a signature stone in her pieces. Paying homage to luxury while rebelling against its conventions. She believes that women can draw strength from the difference their purchase power makes to the environment. </p>
+        <p>“I work to illuminate the natural beauty of precious and semi-precious stones, but also that of man-made materials,” she says. “It is an invitation for women to explore their own sense of self through the expression of their style choices. Any decision that they make has impact, so let it be a positive one.”</p>
+        <p>With her Signature embedded single Black Diamond as a provocative symbol of change, her choices have been intentional, paying homage to luxury whilst breaking ground in the industry in order to create lasting impact for communities and the environment. Her work provides an invitation to be drawn into greater meaning that sits behind the beauty and mystique of its materiality.</p>
+        <p>100% of the proceeds from the SALLY SKOUFIS(™) signature Black Diamond, elegantly featured in this cherished piece, is donated to cause.</p>
+      </div>
+    {% elsif product.metafields.custom.impact == "Queen Bee" %}
+      <p class="h5">Consciously hand crafted jewelry inspired by environmental evolution and sustainable materiality.</p>
+      <div class="prose">
+        <p>Honouring the immeasurable importance of bees and the role they possess in the preservation or destruction of life; Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - a combination of fine, semi-precious, and man-made materials. Her work provides an invitation to be drawn into the greater meaning that lies behind the beauty and mystique of its materiality.</p>
+        <p>Proceeds from the SALLY SKOUFIS™ Queen Bee range are donated to preserve our bee species.</p>
+      </div>
+    
+    {% elsif product.metafields.custom.impact == "Recycled Aluminium" %}
+      <p class="h5">Nine months in the making, ANAX {Dragonfly} is the fulfilment of a pioneering collaboration of elite international craftsmen creating a new form of metal constituent in fine jewelry making – Recycled Aluminium.</p>
+      <div class="prose">
+        <p>A revolutionary collection developed from refined soda cans to mark Sally’s quest for conscious innovation to industry practices.</p>
+        <p>The result is a wholly conscious collection of mini sculptural pieces with fine detailing in vivid hues not otherwise available. The Dragonfly has been a symbol of hope, new beginnings and change for many centuries. </p>
+        <p>ANAX is an ancient Greek word for leader. In a world desperate for sustainable evolution, Sally is incredibly grateful to share this pioneering endeavour with you. As one of the first sustainable alternatives in traditional fine jewelry making, SALLY SKOUFIS™ is honored to release ANAX: a breakthrough in conscious jewelry innovation and design edge.  </p>
+      </div>
+    {% elsif product.metafields.custom.impact == "Pearl" %}
+      <p class="h5">ECLIPSE is a limited edition and Pre-Order collection to conserve our only 'living gemstones'.</p>
+      <div class="prose">
+        <p>Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - pearls are the only gemstone born from living creatures, as such are eco-friendly.  </p>
+        <p>SALLY SKOUFIS partners with sustainable freshwater pearl farmers, who deeply consider the habitat for the mussels and diligently meet the ideal conditions for pearl production and water quality. A process that adds value to the ecosystem. These creatures filter water naturally, by removing heavy metals and nitrogen from the waters surrounding them. Research indicates that pearl farming can improve water quality and the local ecosystem, with positive impacts on coral reef conservation. </p>
+        <p>A single pearl can take several years to grow. Nurture this phenomenon in mind as you wait patiently for us to lovingly hand make your unique piece. </p>
+      </div>
+    {% elsif product.metafields.custom.impact == "Exotic Galuchat Leather" %}
+        <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+      <div class="prose">
+        <p>Exotic Galuchat leather elegantly featured in this cherished piece is sourced from cooperatives of independent fishermen from the Andaman & South China seas who apply traditional and sustainable processes to capture food - we minimise wastage by using the stunning by-product. To further conserve, SALLY SKOUFIS artisans hand craft each piece adhering to policies established by the Washington Convention on Endangered Species (CITES).</p>
+        <p>Sally explores her craft with an opportunity to pioneer and create change, working to continually refine and develop creative and sustainable processes, expressing her designs across all material mediums - a combination of fine, semi-precious and man-made. Her work provides an invitation to be drawn into greater meaning that sits behind the beauty and mystique of its materiality.</p>
+      </div>
+    {% else %}
+      <p class="h5">SALLY SKOUFIS Jewelry: consciously crafted pieces inspired by environmental evolution and sustainable materiality.</p>
+      <div class="prose">
+        <p>Sally's designs are inspired by environmental evolution, not led by trend; purpose driven to be worn to occasion, sentiment or self-expression. Her pieces are expressed emotively – working outside the boundaries of a particular genre yet maintaining a signature aesthetic that provokes expectation and boldly captivates.</p>
+        <p>Creating pieces that are treasured forever, 'of the earth' as well as 'from the hands of a human', Sally uses ethically sourced precious and semi-precious stones, as well as man-made gemstones. Her selection of materials reflects her persistence to pioneer, honouring with stones that empower. They incite soul connection and provide strength to their wearer with inimitable magnetism.</p>
+      </div>
+    {% endif %}
+      
+    <a href="/pages/impact" class="button w-full hidden">Join us to be a part of this evolution</a>
+  </div>
+
+  
+
+  <div id="custom-delivery-wrapper" class="custom-popups-wrapper">
+    <span class="close-button" id="close-button-delivery">X</span>
+    <h2 class="h2">Delivery</h2>
+    <div class="prose">
+      {%- for block in filtered_blocks -%}
+        {%- capture block_content_delivery -%}
+          {%- case block.type -%}
+            {%- when 'product-popups' -%}
+                {% if block.settings.cstm-delivery != blank %}
+                  {{ block.settings.cstm-delivery }}
+                {% endif %}
+          {%- endcase -%}
+       {%- endcapture -%}
+       {{- block_content_delivery -}}
+    {% endfor %}
+    </div>
+  </div>
+
+
+
+  <div id="custom-concierge-wrapper" class="custom-popups-wrapper">
+    <span class="close-button" id="close-button-concierge">X</span>
+    <h2 class="h2">At your service</h2>
+    <div class="prose">
+      {%- for block in filtered_blocks -%}
+        {%- capture block_content_concierge -%}
+          {%- case block.type -%}
+            {%- when 'product-popups' -%}
+                {% if block.settings.cstm-email != blank or block.settings.cstm-phone != blank or block.settings.cstm-hours != blank %}
+                  <p class="with-svg">{%- render 'icon' with 'email' -%}{{ block.settings.cstm-email }}</p>
+                  <p class="with-svg">{%- render 'icon' with 'picto-phone' -%}{{ block.settings.cstm-phone }}</p>
+                  <p class="with-svg">{%- render 'icon' with 'picto-info' -%}{{ block.settings.cstm-hours }}</p>
+                {% endif %}
+          {%- endcase -%}
+       {%- endcapture -%}
+       {{- block_content_concierge -}}
+    {% endfor %}
+    </div>
+  </div>
+
+
+
+
+  
+  
+</div>
+
+
+
+  
+</safe-sticky>
+
+
+  

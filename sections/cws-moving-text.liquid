@@ -1,0 +1,204 @@
+{% style %}
+  :root {
+    --gap: 20px;
+  }
+
+  .alert {
+    position: fixed;
+    z-index:6;
+    width: 100%;
+    overflow: hidden;
+    background:{{ section.settings.background_color }};
+    padding: 15px;
+  }
+
+  .alert__line {
+    display: flex;
+    gap: calc(var(--gap) / 2);
+  }
+
+  .alert__message {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: baseline;
+    gap: calc(var(--gap) / 2 - 2px);
+    font-size: 16px;
+    left: 0;
+    line-height: 130%;
+    white-space: nowrap;
+    color: #000;
+    align-items:center;
+  }
+
+  .alert__message p {
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.font_size }}px !important;
+    margin-right: 50px;
+  }
+
+  .white-dot{
+    height:5px;
+    width:5px;
+    background:{{ section.settings.dot_color }};
+    border-radius:100%;
+    position:relative;
+    left:-25px !important;
+  }
+  
+  .cust_icon{
+    position:relative;
+    left:-25px !important;
+    font-size: {{ section.settings.font_size }}px !important;
+  }
+
+  /* @media(width > 768px){
+    .alert {
+        margin-bottom: -65px;
+    }
+  }
+
+  @media(width <= 768px){
+    .alert {
+        position: relative;
+        z-index: 999;
+        margin-bottom: -45px;
+    }
+  } */
+  
+{% endstyle %}
+
+<div class="alert">
+  <div class="alert__line" id="{{ section.id }}__marquee">
+    <div class="alert__message">
+      {% for block in section.blocks %}
+        {% if block.type == 'CWS_moving_text' %}
+          {% if section.settings.show_dot %}
+          <span class="white-dot"></span>
+          <!-- <span class="cust_icon">💸</span> -->
+          {% endif %}
+          {% if block.settings.icon_before %}
+            {{ block.settings.icon_before | image_url: width:16 | image_tag }}
+          {% endif %}
+          <p>{{ block.settings.moving_text }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  const speed_{{ section.index }} = 1; // pixels at frame
+  const gap___{{ section.index }} = getComputedStyle(document.querySelector('body')).getPropertyValue('--gap'); // IMPORTANT: value should be equal to --gap variable at css
+  const marquee___{{ section.index }} = document.querySelector('#{{ section.id }}__marquee');
+
+  const newItem_{{ section.index }} = () => {
+    return marquee___{{ section.index }}.querySelector('div').cloneNode(true);
+  };
+
+  const numerify_{{ section.index }} = (str) => {
+    return +str.replaceAll(/[^\d-]/g, '');
+  };
+
+  const fillMarquee_{{ section.index }} = () => {
+    while (
+      marquee___{{ section.index }}.querySelectorAll('div').length < 2 ||
+      (marquee___{{ section.index }}.querySelector('div').clientWidth + numerify_{{ section.index }}(gap___{{ section.index }})) * marquee___{{ section.index }}.querySelectorAll('div').length -
+        numerify_{{ section.index }}(gap___{{ section.index }}) <
+        window.innerWidth * 1.5
+    ) {
+      marquee___{{ section.index }}.append(newItem_{{ section.index }}());
+    }
+
+    marquee___{{ section.index }}.querySelectorAll('div').forEach((item) => {
+      if (item.style.position !== 'absolute') item.style.position = 'relative';
+    });
+  };
+  fillMarquee_{{ section.index }}();
+  window.addEventListener('resize', fillMarquee_{{ section.index }});
+
+  const render_{{ section.index }} = () => {
+    marquee___{{ section.index }}.querySelectorAll('div').forEach((item) => {
+      if (item.offsetLeft < 0 && item.offsetLeft < -item.offsetWidth) {
+        marquee___{{ section.index }}.querySelectorAll('div').forEach((e) => {
+          e.style.left = numerify_{{ section.index }}(gap___{{ section.index }}) / 2 - 1 + 'px';
+        });
+        item.remove();
+        marquee___{{ section.index }}.append(newItem_{{ section.index }}());
+      }
+      item.style.left = `${numerify_{{ section.index }}(item.style.left) - speed_{{ section.index }}}px`;
+    });
+    requestAnimationFrame(render_{{ section.index }});
+  };
+
+  requestAnimationFrame(() => {
+    render_{{ section.index }}();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "CWS Moving Text",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show dot separator",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 11
+    }
+  ],
+  "blocks": [
+    {
+      "type": "CWS_moving_text",
+      "name": "CWS Moving Text",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "moving_text",
+          "default": "AUTUMN SALE IS LIVE NOW - 50% OFF",
+          "label": "Moving text"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_before",
+          "label": "Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CWS Moving Text"
+    }
+  ]
+}
+{% endschema %}
+

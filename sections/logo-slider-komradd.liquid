@@ -1,0 +1,89 @@
+{{ 'logo-slider-komradd.css' | asset_url | stylesheet_tag }}
+
+
+
+<div class="container">
+  
+  {% if section.blocks.size > 0 %} 
+  <h4 class="h4">{{ section.settings.heading }}</h4>
+    <div class="logo-slider-komradd">
+      {% for block in section.blocks %}
+            <div>  
+                <img loading="lazy" src="{{ block.settings.logo | img_url: 'medium' }}">
+            </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
+</div>
+
+{% schema %}
+{
+  "name": "Logo Slider Komradd",
+  "class": "section logo-slider-komradd-outer",
+  "settings": [
+    {
+        "type": "inline_richtext",
+        "id": "heading",
+        "label": "Heading"
+    }
+ ],
+  "max_blocks": 30,
+   "blocks": [
+        {
+        "name": "Logo",
+        "type": "logo",
+        "settings": [
+            {
+              "type": "image_picker",
+              "id": "logo",
+              "label": "Logo"
+            }
+        ]
+     }
+   ],
+  "presets": [{
+    "name": "Logo Slider Komradd",
+    "category": "Text"
+  }]
+
+}
+{% endschema %}
+
+<script>
+
+    document.querySelectorAll('.logo-slider-komradd').forEach(slider => {
+        tns({
+          container: slider,
+          items: 4,
+          loop: true,
+          autoplay: true,
+          autoplayButtonOutput: false,
+          preventActionWhenRunning: true,
+          mouseDrag: false,
+          speed: 4000,
+          controls: false,
+          autoplayTimeout: 0000,
+          responsive: {
+            0: {
+              items: 2,
+              gutter: 20
+            },
+            900: {
+              items: 3,
+              gutter: 20
+            },
+            1200: {
+              items: 4,
+              gutter: 20
+            },
+            1300: {
+              items: 5,
+              gutter: 20
+            }
+          }
+        });
+      });
+    
+
+</script>

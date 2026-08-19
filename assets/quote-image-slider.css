@@ -1,0 +1,38 @@
+.quote-image-slider-wrapp{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+.quote-content-wrap, 
+.image-slider-wrap{
+    width: calc(50% - 10px);
+}
+.quote-image-slider-wrapp h3{
+    text-transform: unset !important;
+    line-height: 120% !important;
+}
+.quote-image-slider-wrapp .tns-controls,
+.quote-image-slider-wrapp .tns-nav{
+    display: none;
+}
+.quote-content-wrap{
+    text-align: center;
+    padding: 5% 8%;
+}
+.quote-content-wrap img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 749px){
+    .quote-content-wrap{
+        order:2 ;
+        width: 100%;
+    }
+    .image-slider-wrap{
+        width: 100%;
+    }
+}
