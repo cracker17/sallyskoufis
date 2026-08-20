@@ -226,6 +226,70 @@ spend effort there.
 
 ---
 
+## Round 2 — worked from your mobile PageSpeed run
+
+Scores from your run: **Performance 50, Accessibility 92, Best Practices 92, SEO 69, Agentic 3/4.**
+Metrics: FCP 2.9s, **LCP 18.2s**, TBT 470ms, CLS 0.008, Speed Index 10.1s.
+
+### Read this first: a large part of that report is the preview URL, not your theme
+
+| PageSpeed finding | Reality |
+|---|---|
+| **SEO 69 — "Page is blocked from indexing"** | Shopify puts `<meta name="robots" content="noindex,nofollow">` on **every preview URL**. I verified it: the preview has it, the live site has **no robots meta at all**. This single audit is the whole drop from 85 to 69, and it disappears the moment the theme is published. |
+| **Accessibility — "iframe elements do not have a title"** | That is `#PBarNextFrame`, Shopify's **preview bar**. Not in your theme, gone on a real domain. |
+| **Cache lifetimes — 469 KiB** | 366 KiB of it is the preview bar (`preview-bar/vendor-Df….js` 184 KiB, `vendor.css` 97 KiB, `app-….js` 75 KiB), all with a 1-minute TTL. Preview-only. |
+| **Best Practices — console errors** | `ERR_BLOCKED_BY_CLIENT` on `otlp-http-production.shopifysvc.com` is an ad-blocker in the test browser; the `shop.app` CSP block is because the preview domain isn't in the frame-ancestors allowlist. Neither is theme code. |
+
+**Re-run PageSpeed after publishing** before judging the SEO and Best Practices numbers.
+
+### What I fixed this round
+
+| Finding | Action | Verified |
+|---|---|---|
+| Render-blocking requests (8 files, est 590 ms) | `michaelcustom.css`, `tiny-slider.min.css` and `aos.css` merged into `komradd.css` — each was its own request costing ~470 ms of queueing on throttled 4G for 1–3 KB of CSS | Theme stylesheets **5 → 2** on the preview |
+| Improve image delivery (est 194 KiB) | The 10 footer press logos requested a flat `width=480` with no `srcset`, while rendering at 69×53 on mobile. Now `widths: 140–480` with `sizes` | Markup verified: `srcset` carries 140/180/240/320/480 with `sizes="(max-width: 699px) 140px, 240px"`. At DPR 2 / 375 px the browser selects 320 w, not 480 w. I could **not** get a clean byte measurement — they sit inside a slider that kept them out of the loading path in my browser — so treat the saving as unmeasured. |
+| Buttons without an accessible name | `product-card__quick-add-button` — 24 of them on the homepage, each containing only an `aria-hidden` cart icon, so a screen reader announced them all as "button" | **24 / 24 named**, e.g. "Add to bag - Hybrid Climber". No visual change. |
+
+Sliders and the Swiper removal re-checked after every change: 2 sliders built, 24 slides, 0 Swiper requests.
+
+### LCP 18.2 s — what the breakdown actually says
+
+`TTFB 410 ms + resource load delay 450 ms + load duration 30 ms + **element render delay 3,040 ms**`.
+
+The hero image is not the problem — it loads in 30 ms. **Render delay dominates**, which means the
+main thread is too busy to paint. PageSpeed backs that up: main-thread work 6.7 s, JS execution
+2.3 s, 18 long tasks.
+
+I also found **three full-viewport overlays** stacked on the homepage that are strong candidates for
+stealing the LCP measurement late:
+
+- `div.timesact_bis_popup_overlay` — 375×812
+- `div.timesact_bis_dialog` — 375×812
+- `section.shopify-pc__banner__dialog` — 338×454 (Shopify cookie consent)
+
+Timesact is the pre-order app, and it is injecting full-screen overlays **on the homepage, where
+there are no products at all**. That is worth raising with the vendor.
+
+### Where I deliberately stopped
+
+`tinyslidercustom.js` is still parser-blocking (12.9 KiB, 630 ms in your report) and still carries
+legacy polyfills (11.1 KiB of `Object.keys` shim). I am **not** touching it again. Deferring it is
+exactly what broke every slider on a cold load earlier in this job, and swapping in a modern build
+is the same category of change. The remaining gain is real but modest; the regression risk is
+proven. If you want it pursued, it needs a proper test pass, not another blind attempt.
+
+### The honest ceiling
+
+Main-thread work of 6.7 s is not a theme problem any more. `Reduce unused JavaScript — 491 KiB` and
+`Legacy JavaScript — 41 KiB` point almost entirely at apps: Klaviyo, Swym, UPEZ, Clarity, Timesact.
+`Forced reflow` names **Clarity at 230 ms** on its own — and Clarity is your *second* session
+recorder, running alongside Hotjar.
+
+Mobile Performance will not reach 90 while those apps load as they do. `APP-AUDIT.md` ranks them
+with measured costs; those calls are yours.
+
+---
+
 ## Verify it yourself, in this order
 
 1. **Upload** `SALLY SKOUFIS - optimized.zip` — Shopify admin → Online Store → Themes →
