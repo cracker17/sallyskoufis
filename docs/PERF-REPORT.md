@@ -3,12 +3,11 @@
 Baseline measured 2026-08-20 against the live site and the untouched theme export.
 "After" figures are measured against the modified theme.
 
-> **What is not in this report yet: PageSpeed scores for the new theme.**
-> Scoring the rebuilt theme requires it to be running on a URL, and it isn't yet — it's a zip
-> waiting to be uploaded. Everything below is a measurement of the *inputs* PageSpeed grades,
-> not a claim about the score. The score verification is the first thing to do after you upload,
-> and there's a step-by-step at the bottom. I'd rather hand you real numbers for the things I
-> could measure than a projected score I made up.
+> **Status: the theme is now live on a preview URL and has been verified in a real browser.**
+> See "Verified on the preview" below for what was measured on the running storefront. I still do
+> not have fresh PageSpeed *scores* — the public PageSpeed API is returning HTTP 429 (daily quota)
+> for me — so please re-run PageSpeed yourself against the preview and paste the numbers in.
+> Everything below is measured, not projected.
 
 ---
 
@@ -18,12 +17,12 @@ Shopify's own linter, run against the baseline commit and the finished theme:
 
 | Check | Before | After | Change |
 |---|---:|---:|---:|
-| **Total offences** | **104** | **47** | **−57** |
-| **Errors** | **32** | **0** | **−32** |
+| **Total offences** | **104** | **48** | **−56** |
+| **Errors** | **32** | **1** | **−31** |
 | `ImgWidthAndHeight` | 20 | 0 | −20 |
 | `DeprecatedFilter` | 20 | 0 | −20 |
 | `RemoteAsset` | 16 | 2 | −14 |
-| `ParserBlockingScript` | 8 | 0 | −8 |
+| `ParserBlockingScript` | 8 | 1 | −7 |
 | `MatchingTranslations` | 2 | 0 | −2 |
 | `LiquidHTMLSyntaxError` | 1 | 0 | −1 |
 | `ValidSchemaTranslations` | 1 | 0 | −1 |
@@ -40,6 +39,9 @@ The two that went up, honestly:
   breadcrumb links. Pre-existing — Theme Check couldn't parse past the stray `</video>` to reach
   them. Left alone deliberately: undefined means the faded style always applies, which is exactly
   how the page looks today. "Fixing" it would change the design.
+
+The single remaining **error** is `ParserBlockingScript`, and it is deliberate — see the slider
+regression below.
 
 ---
 
@@ -140,6 +142,87 @@ with measured costs.
 **Realistic expectation:** desktop 90+ should land from the theme work alone. Mobile 90+ needs at
 least the two heaviest apps (UPEZ, Swym) addressed. I'll re-measure and give you the real numbers
 once the theme is on a preview URL.
+
+---
+
+## Verified on the preview
+
+Measured in a real browser against `88gv6aea4kg7ubsa-83684589859.shopifypreview.com`, side by side
+with the live storefront.
+
+### A regression I introduced, found and fixed here
+
+Deferring `tinyslidercustom.js` and moving the sections' inline `tns()` calls to `DOMContentLoaded`
+**broke every slider on a cold load**:
+
+| | live theme | preview, before fix | preview, after fix |
+|---|---:|---:|---:|
+| `.tns-outer` built | 2 | **0** | 2 |
+| Featured slider slides | 24 | **0** | 24 |
+
+It worked on a warm load and when called manually after load, which is exactly why static checks and
+a warm page never caught it. I could not pin the throw down inside the minified library
+(`HierarchyRequestError` from inside `tns()`), so rather than ship a guess I restored the load order
+that is demonstrably working in production: tiny-slider is a synchronous script again, and the
+inits run during parsing.
+
+**That is the one parser-blocking script left** — 12 KB gzipped. Working sliders are worth more.
+jQuery, paroller, AOS and `custom.js` all remain deferred.
+
+I also added `scriptcheck.py`, which strips Liquid and runs `node --check` over every inline
+`<script>` in the theme. It immediately caught a second bug of mine: the `alt` attributes I added
+during the accessibility pass used double quotes inside an already-double-quoted JS string, which
+made three sliders' entire `<script>` blocks a syntax error.
+
+### Swiper: 169 KB for one line of text
+
+The announcement bar loaded **151 KB of JavaScript and 18 KB of CSS on every page** to display a
+single static slide — after the geo filter exactly one survives, and the prev/next arrows are hidden
+by CSS anyway. Swiper is now fetched only when two or more slides survive.
+
+Rendering is **pixel-identical** with the library gone:
+
+| | live (Swiper loaded) | preview (Swiper never loads) |
+|---|---|---|
+| Bar, mobile 375px | 375×26 at (0,0) | 375×26 at (0,0) |
+| Text block, mobile | 173×12 at (101,7) | 173×12 at (101,7) |
+| Bar, desktop 1280px | 1280×26 at (0,0) | 1280×26 at (0,0) |
+| Text block, desktop | 173×12 at (553,7) | 173×12 at (553,7) |
+| Swiper requests | 2 (169 KB) | **0** |
+
+The `ipapi.co` geo lookup was also blocking the bar for **290 ms on every view**. It is now cached
+for the session and raced against a 1.5 s timeout.
+
+### Console on the preview
+
+`ReferenceError: PhotoSwipe is not defined` and `TypeError: Cannot read properties of null` are
+**both gone**. What remains is preview-environment noise, not theme code: a `frame-ancestors` CSP
+block for `shop.app` (the preview domain isn't in the allowlist) and Shopify web-pixel 404s (pixels
+don't serve on preview domains). Both disappear on a real domain.
+
+### Accessibility failures from your PageSpeed run — all fixed and re-verified
+
+| Audit | Before | After |
+|---|---|---|
+| Links must have discernible text | `a.swym-wishlist` had no name | name is "Wishlist" |
+| Buttons must have discernible text | slider prev/next unnamed | "Previous" / "Next" |
+| Elements must only use permitted ARIA attributes | `.tns-controls` had `aria-label` with no role | `role="group"` |
+| Links do not have descriptive text (SEO) | 13 links reading "MORE" | "more colours of Destiny Ear Cuff" |
+
+The wishlist link was also hard-coded to `https://sallyskoufis.com`, so on the preview it sent you
+to the live store. It is a relative path now.
+
+### Other measured numbers
+
+| | Value |
+|---|---|
+| HTML transfer (homepage, gzipped) | **131 KB** (was 165 KB) |
+| Hero image, mobile | **47 KB** WebP, fetched via the preload hint |
+| CLS | **0** |
+
+**Not fixed, and it needs you:** `WebMCP form coverage — 27 forms missing annotations` is an
+experimental Lighthouse category that is not part of the four scores. I left it alone rather than
+spend effort there.
 
 ---
 
