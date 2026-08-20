@@ -2216,6 +2216,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
+  /* tinyslidercustom.js is deferred now, so it has not run yet while this inline script is
+     being parsed. Deferred scripts all finish before DOMContentLoaded, so waiting for that
+     event is what keeps `tns` defined here. */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof tns !== 'function') return;
+
     document.querySelectorAll('.testimonial-slider').forEach(slider => {
           tns({
             container: slider,
@@ -2226,7 +2232,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoHeight: true,
             speed: 1000,
             autoplayTimeout: 5500,
-            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">", "<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">"],
+            controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt='' aria-hidden='true' width='9' height='16'>", "<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt='' aria-hidden='true' width='9' height='16'>"],
             responsive: {
               0: {
                 items: 1,
@@ -2244,8 +2250,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           });
         });
-    
-    </script>
+  });
+</script>
 
     <script>
       var colorsImages = [];

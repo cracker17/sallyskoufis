@@ -39,6 +39,12 @@
 {% endstylesheet %}
 
 <script>
+  /* tinyslidercustom.js is deferred now, so it has not run yet while this inline script is
+     being parsed. Deferred scripts all finish before DOMContentLoaded, so waiting for that
+     event is what keeps `tns` defined here. */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof tns !== 'function') return;
+
 
     document.querySelectorAll('.prod-coll-slider').forEach(slider => {
         var tnsInstance = tns({
@@ -51,7 +57,7 @@
           mouseDrag: false,
           speed: 1500,
           controls: true,
-          controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">","<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt="" aria-hidden="true" width="9" height="16">"],
+          controlsText: ["<img src='{{ "left-arrow-svg.svg" | asset_url }}' alt='' aria-hidden='true' width='9' height='16'>","<img src='{{ "right-arrow-svg.svg" | asset_url }}' alt='' aria-hidden='true' width='9' height='16'>"],
           autoplayTimeout: 5000,
           slideBy: 'page',
           responsive: {
@@ -83,8 +89,5 @@
       
       
       });
-
- 
-    
-
+  });
 </script>

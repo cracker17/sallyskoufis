@@ -69,6 +69,7 @@
 <script>
   // Wrap your code in a setTimeout function
   document.addEventListener('DOMContentLoaded', function () {
+    if (typeof tns !== 'function') return;
     setTimeout(function() {
         document.querySelectorAll('.prod-reco-slider').forEach(slider => {
           tns({

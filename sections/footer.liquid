@@ -622,6 +622,12 @@
 }
 {% endschema %}
 <script>
+  /* tinyslidercustom.js is deferred now, so it has not run yet while this inline script is
+     being parsed. Deferred scripts all finish before DOMContentLoaded, so waiting for that
+     event is what keeps `tns` defined here. */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof tns !== 'function') return;
+
 
     document.querySelectorAll('.logo-slider-komradd').forEach(slider => {
         tns({
@@ -656,8 +662,7 @@
           }
         });
       });
-    
-
+  });
 </script>
 <script>
   if (window.innerWidth < 700) {
