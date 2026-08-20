@@ -190,16 +190,16 @@ Supported variables
           {%- form 'product', product, is: 'product-form' -%}
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
             <button type="submit" class="product-card__quick-add-button">
+              <span class="sr-only">{{ 'product.general.add_to_cart_button' | t }} - {{ product.title }}</span>
               {%- render 'icon' with 'cart', width: 18, direction_aware: false -%}
-              
             </button>
           {%- endform -%}
         {%- else -%}
           {%- capture quick_buy_id -%}product-quick-buy-{{ section.id }}-{{ block.id }}-{{ quick_buy_context }}-{{ product.id }}{%- endcapture -%}
 
           <button type="button" aria-controls="{{ quick_buy_id }}" class="product-card__quick-add-button">
+            <span class="sr-only">{{ 'product.general.choose_options' | t }} - {{ product.title }}</span>
             {%- render 'icon' with 'cart', width: 18, direction_aware: false -%}
-           
           </button>
 
           <quick-buy-modal handle="{{ product.handle }}" class="quick-buy-modal modal" id="{{ quick_buy_id }}">

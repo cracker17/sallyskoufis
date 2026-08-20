@@ -15,52 +15,132 @@
       
         {% if section.settings.logo1 != blank %}
         <div>  
-            <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo1 | image_url: width: 480 }}" alt="{{ section.settings.logo1.alt | default: shop.name | escape }}">
+            {{- section.settings.logo1
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo1.alt | default: shop.name
+          -}}
         </div>
         {% endif %}
         {% if section.settings.logo2 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo2 | image_url: width: 480 }}" alt="{{ section.settings.logo2.alt | default: shop.name | escape }}">
+              {{- section.settings.logo2
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo2.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo3 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo3 | image_url: width: 480 }}" alt="{{ section.settings.logo3.alt | default: shop.name | escape }}">
+              {{- section.settings.logo3
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo3.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo4 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo4 | image_url: width: 480 }}" alt="{{ section.settings.logo4.alt | default: shop.name | escape }}">
+              {{- section.settings.logo4
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo4.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo5 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo5 | image_url: width: 480 }}" alt="{{ section.settings.logo5.alt | default: shop.name | escape }}">
+              {{- section.settings.logo5
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo5.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo6 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo6 | image_url: width: 480 }}" alt="{{ section.settings.logo6.alt | default: shop.name | escape }}">
+              {{- section.settings.logo6
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo6.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo7 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo7 | image_url: width: 480 }}" alt="{{ section.settings.logo7.alt | default: shop.name | escape }}">
+              {{- section.settings.logo7
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo7.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo8 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo8 | image_url: width: 480 }}" alt="{{ section.settings.logo8.alt | default: shop.name | escape }}">
+              {{- section.settings.logo8
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo8.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo9 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo9 | image_url: width: 480 }}" alt="{{ section.settings.logo9.alt | default: shop.name | escape }}">
+              {{- section.settings.logo9
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo9.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
         {% if section.settings.logo10 != blank %}
           <div>  
-              <img width="240" height="115" loading="lazy" decoding="async" src="{{ section.settings.logo10 | image_url: width: 480 }}" alt="{{ section.settings.logo10.alt | default: shop.name | escape }}">
+              {{- section.settings.logo10
+            | image_url: width: 480
+            | image_tag:
+                widths: '140,180,240,320,480',
+                sizes: '(max-width: 699px) 140px, 240px',
+                loading: 'lazy',
+                decoding: 'async',
+                alt: section.settings.logo10.alt | default: shop.name
+          -}}
           </div>
         {% endif %}
 

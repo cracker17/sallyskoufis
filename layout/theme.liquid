@@ -44,11 +44,13 @@
     <link rel="preload" as="style" href="{{ 'theme.css' | asset_url }}">
     <link rel="preload" as="style" href="{{ 'komradd.css' | asset_url }}">
 
+    {%- comment -%}
+      Two stylesheets, not five. michaelcustom.css, tiny-slider.min.css and aos.css are now
+      appended inside komradd.css - PageSpeed measured roughly 470ms of queueing per separate
+      request on throttled 4G, for 1-3KB of CSS each.
+    {%- endcomment -%}
     {{- 'theme.css' | asset_url | stylesheet_tag -}}
     {{- 'komradd.css' | asset_url | stylesheet_tag -}}
-    {{- 'michaelcustom.css' | asset_url | stylesheet_tag -}}
-    {{- 'tiny-slider.min.css' | asset_url | stylesheet_tag -}}
-    {{- 'aos.css' | asset_url | stylesheet_tag -}}
 
     {%- if request.page_type == 'gift_card' -%}
       <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
