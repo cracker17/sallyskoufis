@@ -254,7 +254,7 @@ Supported variables
                             {% endif %}
                             {% assign swatch_count = swatch_count | plus: 1 %}
                             {% if swatch_count == 5 %}
-                              <a class="view-more-color-product-card small-text" href="{{ product.url }}" aria-label="{{ 'See more colours of' }} {{ product.title | escape }}">more {%- render 'icon' with 'plus', width: 9, direction_aware: true -%} </a>
+                              <a class="view-more-color-product-card small-text" href="{{ product.url }}">more<span class="sr-only"> colours of {{ product.title }}</span> {%- render 'icon' with 'plus', width: 9, direction_aware: true -%} </a>
                             {% endif %}
                           {% endif %}
                         {% endfor %}

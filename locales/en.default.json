@@ -71,6 +71,7 @@
     "general": {
       "account": "Account",
       "search": "Search",
+      "wishlist": "Wishlist",
       "cart": "Bag",
       "primary_navigation": "Primary navigation",
       "secondary_navigation": "Secondary navigation",
@@ -98,7 +99,7 @@
       "view_in_space": "View in your space",
       "taxes_included": "Tax included.",
       "taxes_excluded": "Tax excluded.",
-      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Shipping calculated<\/a> at checkout",
+      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Shipping calculated</a> at checkout",
       "size_chart": "Size chart",
       "available_colors_count": {
         "one": "{{ count }} color available",
@@ -335,9 +336,9 @@
       "weight": "Weight",
       "subtotal": "Subtotal",
       "total": "Total",
-      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a href=\"{{ link }}\" class=\"link\">shipping<\/a> calculated at checkout",
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a href=\"{{ link }}\" class=\"link\">shipping</a> calculated at checkout",
       "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
-      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\" class=\"link\">Shipping<\/a> calculated at checkout.",
+      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\" class=\"link\">Shipping</a> calculated at checkout.",
       "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
       "add_order_note": "Gift Note",
       "edit_order_note": "Edit Gift Note",
@@ -442,7 +443,7 @@
   },
   "sections": {
     "before_after": {
-      "not_enough_blocks": "To show before\/after comparison, add more blocks in the section.",
+      "not_enough_blocks": "To show before/after comparison, add more blocks in the section.",
       "percentage_shown": "Percentage of after photo shown"
     },
     "countdown_timer": {
@@ -505,13 +506,13 @@
       },
       "contextual_availability": {
         "products_not_available": {
-          "one": "This product will be removed from your bag because it's not available in your country\/region.",
-          "other": "These products will be removed from your bag because they're not available in your country\/region."
+          "one": "This product will be removed from your bag because it's not available in your country/region.",
+          "other": "These products will be removed from your bag because they're not available in your country/region."
         }
       },
       "order_summary": {
         "shopping_cart_label": "Shopping bag",
-        "cart_does_not_meet_discount_requirements_notice": "<strong style=\"text-transform:uppsecase:>{{ code }}<\/strong> discount code isn't valid for the items in your bag."
+        "cart_does_not_meet_discount_requirements_notice": "<strong style=\"text-transform:uppsecase:>{{ code }}</strong> discount code isn't valid for the items in your bag."
       },
       "shipping": {
         "no_rates_for_cart_or_destination_notice": "There are no shipping methods available for your bag or address"

@@ -77,7 +77,8 @@
       "open_menu": "Navigationsmenü öffnen",
       "open_search": "Suche öffnen",
       "open_account": "Kundenkontoseite öffnen",
-      "open_cart": "Warenkorb öffnen"
+      "open_cart": "Warenkorb öffnen",
+      "wishlist": "Wunschliste"
     }
   },
   "product": {
@@ -98,7 +99,7 @@
       "view_in_space": "In deinem Bereich ansehen",
       "taxes_included": "inkl. MwSt.",
       "taxes_excluded": "zzgl. MwSt.",
-      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Versandkosten<\/a> werden an der Kasse berechnet",
+      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Versandkosten</a> werden an der Kasse berechnet",
       "size_chart": "Größentabelle",
       "available_colors_count": {
         "one": "{{ count }} Farbe verfügbar",

@@ -313,8 +313,61 @@
     if (window.AOS) window.AOS.init();
   }
 
+  /* ---------------------------------------------------------------------------------------------
+   * tiny-slider accessibility
+   *
+   * tiny-slider builds its own controls, and two of its choices fail an audit:
+   *   - the controls wrapper gets aria-label + tabindex="0" but no role, so the aria-label is not
+   *     a permitted attribute on that element
+   *   - the prev/next buttons contain only an arrow image, which is decorative, so the buttons end
+   *     up with no accessible name at all
+   * Both are patched here rather than in the six call sites, and re-applied for sliders that are
+   * built later (product page, quick views).
+   * ------------------------------------------------------------------------------------------- */
+  function fixSliderA11y(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+
+    scope.querySelectorAll('.tns-controls').forEach(function (controls) {
+      if (!controls.getAttribute('role')) controls.setAttribute('role', 'group');
+
+      controls.querySelectorAll('button').forEach(function (button) {
+        var named = button.getAttribute('aria-label') || button.textContent.trim();
+        if (named) return;
+
+        /* The theme already exposes localised strings on window.themeVariables. */
+        var strings = (window.themeVariables && window.themeVariables.strings) || {};
+        var direction = button.getAttribute('data-controls');
+        button.setAttribute('aria-label', direction === 'prev'
+          ? (strings.previous || 'Previous')
+          : (strings.next || 'Next'));
+      });
+    });
+
+    scope.querySelectorAll('.tns-nav button').forEach(function (button, index) {
+      if (!button.getAttribute('aria-label') && !button.textContent.trim()) {
+        button.setAttribute('aria-label', 'Go to slide ' + (index + 1));
+      }
+    });
+  }
+
+  function watchForLateSliders() {
+    if (typeof MutationObserver !== 'function') return;
+
+    var pending = false;
+    new MutationObserver(function () {
+      if (pending) return;
+      pending = true;
+      window.requestAnimationFrame(function () {
+        pending = false;
+        fixSliderA11y(document);
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
   ready(function () {
     initAos();
+    fixSliderA11y(document);
+    watchForLateSliders();
     timesact();
     headerHighlight();
     heroCrossfade();

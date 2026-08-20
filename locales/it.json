@@ -47,7 +47,7 @@
       "subscribed_successfully": "Ti sei iscritto alla nostra newsletter."
     },
     "localization": {
-      "country": "Paese\/Area geografica",
+      "country": "Paese/Area geografica",
       "language": "Lingua"
     },
     "privacy_banner": {
@@ -77,7 +77,8 @@
       "open_menu": "Apri il menu di navigazione",
       "open_search": "Mostra il menu di ricerca",
       "open_account": "Mostra account",
-      "open_cart": "Mostra il carrello"
+      "open_cart": "Mostra il carrello",
+      "wishlist": "Lista dei desideri"
     }
   },
   "product": {
@@ -98,7 +99,7 @@
       "view_in_space": "Visualizza nel tuo spazio",
       "taxes_included": "Tasse incluse.",
       "taxes_excluded": "Tasse escluse.",
-      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Spedizione calcolata<\/a> al checkout",
+      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">Spedizione calcolata</a> al checkout",
       "size_chart": "Tabella taglie",
       "available_colors_count": {
         "one": "{{ count }} colore disponibile",
