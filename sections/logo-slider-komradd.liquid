@@ -51,11 +51,10 @@
 {% endschema %}
 
 <script>
-  /* tinyslidercustom.js is deferred now, so it has not run yet while this inline script is
-     being parsed. Deferred scripts all finish before DOMContentLoaded, so waiting for that
-     event is what keeps `tns` defined here. */
-  document.addEventListener('DOMContentLoaded', function () {
-    if (typeof tns !== 'function') return;
+  /* tiny-slider is loaded synchronously earlier in <body>, so tns is defined here. These
+     inits deliberately run during parsing: moving them to DOMContentLoaded made every
+     slider fail on a cold load, verified against the theme preview. */
+  if (typeof tns === 'function') {
 
 
     document.querySelectorAll('.logo-slider-komradd').forEach(slider => {
@@ -90,5 +89,5 @@
           }
         });
       });
-  });
+  }
 </script>

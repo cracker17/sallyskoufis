@@ -124,6 +124,14 @@
     {% endif %}
     ">
 
+    {%- comment -%}
+      tiny-slider is the one library that cannot be deferred. Sections call tns() from inline
+      scripts while the page is still parsing, and moving those calls to DOMContentLoaded made
+      every slider fail on a cold load - verified on the theme preview, which built 0 sliders
+      against the live theme's 2. Correctness wins over one parser-blocking request here.
+    {%- endcomment -%}
+    <script src="{{ 'tinyslidercustom.js' | asset_url }}"></script>
+
     {%- render 'shadow-dom-templates' -%}
 
     <loading-bar class="loading-bar" aria-hidden="true"></loading-bar>
@@ -176,7 +184,6 @@
     <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
     <script src="{{ 'jquery.paroller.min.js' | asset_url }}" defer></script>
     <script src="{{ 'aos.js' | asset_url }}" defer></script>
-    <script src="{{ 'tinyslidercustom.js' | asset_url }}" defer></script>
     <script src="{{ 'custom.js' | asset_url }}" defer></script>
 
     {%- comment -%}
